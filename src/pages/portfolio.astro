@@ -77,6 +77,38 @@ const projects = [
     description: 'Pipeline konten berbasis n8n dengan agent berlapis: satu AI menulis caption, satu AI membuat gambar yang sesuai, dan satu AI menjadwalkan & mempublikasikan ke Instagram serta TikTok setiap hari.',
     stack: ['n8n', 'LLM Agents', 'Image Generation API'],
   },
+  {
+    category: 'web',
+    kind: 'web' as const,
+    tag: 'Landing Page',
+    title: 'Landing Page Coaching Tennis & Padel',
+    description: 'Landing page personal coach dengan alur booking sesi, breakdown layanan (tennis, padel, performance), testimoni, dan FAQ — dilengkapi CTA langsung ke WhatsApp.',
+    stack: ['Landing Page', 'Booking Flow', 'WhatsApp Integration'],
+  },
+  {
+    category: 'web',
+    kind: 'web' as const,
+    tag: 'Company Profile',
+    title: 'Website Blue Sky Creation',
+    description: 'Website company profile untuk studio content creation & social media marketing — mencakup halaman portfolio, pricing, blog, dan dukungan dua bahasa (EN/中文).',
+    stack: ['Astro', 'Multi-language', 'WhatsApp Integration'],
+  },
+  {
+    category: 'web',
+    kind: 'web' as const,
+    tag: 'Invoicing System',
+    title: 'Sistem Invoicing Blue Sky Creation',
+    description: 'Sistem invoicing internal untuk Blue Sky Creation — membuat, mengelola, dan menerbitkan invoice klien secara terpusat.',
+    stack: ['Invoicing', 'Internal Dashboard'],
+  },
+  {
+    category: 'web',
+    kind: 'tool' as const,
+    tag: 'Utility Tool',
+    title: 'Kokofibo Photo Tools',
+    description: 'Tool kompresi foto dan konversi ke WebP/JPEG/PNG yang berjalan sepenuhnya di browser pengguna — tanpa upload file ke server manapun, jadi privasi foto tetap terjaga.',
+    stack: ['Client-side Processing', 'Batch Compression', 'WebP'],
+  },
 ];
 
 const filters = [
