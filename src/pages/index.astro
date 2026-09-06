@@ -1,0 +1,256 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NetworkField from '../components/NetworkField.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import PortfolioCard from '../components/PortfolioCard.astro';
+
+const services = [
+  {
+    code: 'SVC.01 — WEB',
+    title: 'Website & Aplikasi Bisnis',
+    description: 'Platform company profile, dashboard internal, hingga aplikasi custom yang dibangun cepat dan mudah dirawat.',
+    points: ['Company profile & landing page', 'Web app / dashboard custom', 'Integrasi API pihak ketiga'],
+  },
+  {
+    code: 'SVC.02 — AI AGENT',
+    title: 'Otomasi Agentic AI',
+    description: 'AI agent yang benar-benar menjalankan pekerjaan: membalas chat pelanggan, memproses data, sampai mempublikasikan konten — tanpa campur tangan manual tiap hari.',
+    points: ['Chatbot WhatsApp berbasis AI & konteks bisnis', 'Pipeline multi-agent (n8n + LLM)', 'Integrasi agent ke sistem & data internal'],
+  },
+  {
+    code: 'SVC.03 — TRADING',
+    title: 'Trading System & Expert Advisor',
+    description: 'Expert Advisor MT4/MT5 dari logika entry, risk management, hingga eksekusi otomatis dan multi-akun.',
+    points: ['Strategi entry & multi-layer lot', 'Risk & money management', 'Copy trading Master/Slave'],
+  },
+  {
+    code: 'SVC.04 — HR/PAYROLL',
+    title: 'HR & Payroll Automation',
+    description: 'Sistem HR dan payroll untuk grup multi-brand: perhitungan gaji, absensi, hingga pelaporan pajak.',
+    points: ['Perhitungan payroll & PPh 21', 'Absensi & transfer karyawan', 'Laporan cost & rekap otomatis'],
+  },
+  {
+    code: 'SVC.05 — SUPPORT',
+    title: 'Maintenance & Integrasi',
+    description: 'Pendampingan pasca-launch: perbaikan bug, peningkatan performa, dan integrasi sistem baru ke sistem lama.',
+    points: ['Monitoring & bug fixing', 'Optimasi performa', 'Integrasi sistem lintas platform'],
+  },
+];
+
+const stack = ['Laravel', 'Vue', 'Astro', 'MySQL', 'MQL4 / MQL5', 'Tailwind CSS', 'REST API', 'Livewire', 'n8n', 'LLM Agents'];
+
+const process = [
+  { n: '01', title: 'Discovery', desc: 'Memahami proses bisnis, data, dan tujuan sistem sebelum menulis satu baris kode.' },
+  { n: '02', title: 'Desain Sistem', desc: 'Merancang arsitektur, alur data, dan tampilan yang jelas untuk pengguna akhir.' },
+  { n: '03', title: 'Build & Test', desc: 'Pengembangan iteratif dengan pengujian di setiap tahap — bukan sekali jadi di akhir.' },
+  { n: '04', title: 'Ship & Support', desc: 'Deploy ke production, lalu pendampingan aktif untuk perbaikan dan penyesuaian.' },
+];
+---
+
+<BaseLayout
+  title="Kokofibo — Sistem Digital untuk Bisnis yang Bergerak Cepat"
+  description="Kokofibo membangun website bisnis, sistem HR & payroll, serta trading system untuk perusahaan yang butuh sistem yang benar-benar bekerja. Didirikan oleh Anton Phan."
+>
+  <!-- HERO -->
+  <section class="relative flex min-h-[92vh] items-center overflow-hidden pt-28">
+    <NetworkField class="opacity-80" />
+    <div class="pointer-events-none absolute inset-0 bg-grid-fade"></div>
+
+    <div class="container-kf relative grid gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+      <div>
+        <span class="eyebrow reveal-up">Kokofibo · Software & Systems Studio</span>
+        <h1 class="reveal-up mt-6 text-balance font-display text-4xl font-semibold leading-[1.08] text-paper sm:text-5xl lg:text-6xl">
+          Kami membangun sistem yang <span class="text-signal">benar-benar dipakai</span>, bukan sekadar dilihat.
+        </h1>
+        <p class="reveal-up mt-6 max-w-xl text-base leading-relaxed text-paper/60 sm:text-lg">
+          Dari website perusahaan, automasi HR &amp; payroll, sampai trading engine yang berjalan 24 jam —
+          Kokofibo merancang dan mengembangkan sistem digital untuk tim yang tidak punya waktu untuk sistem yang setengah jadi.
+        </p>
+        <div class="reveal-up mt-9 flex flex-wrap items-center gap-4">
+          <a href="/contact" class="btn-primary">Mulai Proyek Anda</a>
+          <a href="/portfolio" class="btn-ghost">Lihat Portfolio</a>
+        </div>
+
+        <div class="reveal-up mt-12 flex flex-wrap items-center gap-x-6 gap-y-3">
+          {stack.map((s) => (
+            <span class="font-mono text-[11px] uppercase tracking-wide text-paper/35">{s}</span>
+          ))}
+        </div>
+      </div>
+
+      <div class="reveal-up relative">
+        <div class="overflow-hidden rounded-2xl border border-ink-line bg-ink-soft shadow-2xl">
+          <div class="flex items-center gap-2 border-b border-ink-line bg-ink-raised px-4 py-3">
+            <span class="h-2.5 w-2.5 rounded-full bg-signal"></span>
+            <span class="h-2.5 w-2.5 rounded-full bg-paper/20"></span>
+            <span class="h-2.5 w-2.5 rounded-full bg-paper/20"></span>
+            <span class="ml-3 font-mono text-[11px] text-paper/40">kokofibo — system.log</span>
+          </div>
+          <div id="terminal" class="space-y-2.5 px-5 py-6 font-mono text-[13px] leading-relaxed text-paper/70">
+            <p><span class="text-signal">$</span> deploy payroll-system --client=multi-brand</p>
+            <p class="text-paper/40">✓ build succeeded in 4.2s</p>
+            <p><span class="text-signal">$</span> connect trading-engine --mode=live</p>
+            <p class="text-paper/40">✓ EA v4.9 online, 3 accounts synced</p>
+            <p><span class="text-signal">$</span> ship web-platform --env=production</p>
+            <p class="text-paper/40">✓ deployed, SSL active, uptime 100%</p>
+            <p class="typing-line"><span class="text-signal">$</span> <span id="typing-target"></span><span class="cursor">▌</span></p>
+          </div>
+        </div>
+        <div class="absolute -bottom-6 -right-6 hidden h-24 w-24 rounded-2xl bg-signal-gradient opacity-90 shadow-glow sm:block"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section-pad relative">
+    <div class="container-kf">
+      <SectionHeading
+        eyebrow="Layanan"
+        title="Satu tim, lima kompetensi inti."
+        description="Kami tidak menjual template. Setiap sistem dirancang sesuai proses bisnis Anda — dan tetap Anda pahami cara kerjanya."
+      />
+      <div class="reveal-stagger mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((s) => <ServiceCard {...s} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="section-pad relative border-y border-ink-line bg-ink-soft/40">
+    <div class="container-kf">
+      <SectionHeading
+        eyebrow="Cara Kerja"
+        title="Empat tahap, dari ide sampai production."
+      />
+      <div class="reveal-stagger mt-14 grid gap-8 md:grid-cols-4">
+        {process.map((p, i) => (
+          <div class="relative">
+            <span class="font-mono text-sm text-signal">{p.n}</span>
+            <h3 class="mt-3 font-display text-lg font-semibold text-paper">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-paper/55">{p.desc}</p>
+            {i < process.length - 1 && (
+              <span class="absolute right-[-1rem] top-1 hidden h-px w-8 bg-ink-line md:block"></span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PORTFOLIO -->
+  <section class="section-pad relative">
+    <div class="container-kf">
+      <div class="reveal-up flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
+        <SectionHeading
+          eyebrow="Karya Terbaru"
+          title="Sistem yang sudah berjalan di production."
+          class="max-w-xl"
+        />
+        <a href="/portfolio" class="btn-ghost shrink-0">Semua Portfolio</a>
+      </div>
+
+      <div class="reveal-stagger mt-14 grid gap-6 md:grid-cols-3">
+        <PortfolioCard
+          kind="trading"
+          tag="MT4 / MT5"
+          title="KokofiboSmartEntry EA"
+          description="Expert Advisor dengan multi-layer entry, auto-close berbasis virtual SL, dan panel kontrol yang disederhanakan — kini di versi 4.9."
+          stack={['MQL4', 'MQL5', 'Risk Engine']}
+        />
+        <PortfolioCard
+          kind="payroll"
+          tag="Multi-brand"
+          title="Sistem HR & Payroll Yifang Group"
+          description="Automasi transfer karyawan antar-brand, absensi otomatis, dan slip gaji — dibangun di atas Laravel untuk beberapa sub-brand sekaligus."
+          stack={['Laravel', 'Livewire', 'MySQL']}
+        />
+        <PortfolioCard
+          kind="tax"
+          tag="Kalkulator Pajak"
+          title="Kalkulator PPh 21 Kokofibo"
+          description="Kalkulator pajak penghasilan dengan visualisasi bracket dan perbandingan skema PT vs perorangan, lengkap dengan dark mode."
+          stack={['Vue 2', 'Tax Logic', 'Dark Mode']}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-pad relative overflow-hidden border-t border-ink-line">
+    <NetworkField class="opacity-40" />
+    <div class="container-kf relative">
+      <div class="reveal-up mx-auto max-w-2xl text-center">
+        <span class="eyebrow justify-center">Mulai Sekarang</span>
+        <h2 class="mt-5 text-balance font-display text-3xl font-semibold text-paper sm:text-4xl">
+          Punya ide sistem? Mari kita bangun sampai jalan.
+        </h2>
+        <p class="mt-4 text-paper/60">
+          Konsultasi awal gratis — ceritakan kebutuhan Anda, kami bantu petakan solusinya.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <a href="/contact" class="btn-primary">Hubungi Kami</a>
+          <a href="/pricing" class="btn-ghost">Lihat Paket Harga</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const lines = [
+    'status --all-systems',
+    'watching for the next deploy...',
+  ];
+
+  function typeLoop() {
+    const target = document.getElementById('typing-target');
+    if (!target) return;
+    let lineIndex = 0;
+
+    const type = () => {
+      const text = lines[lineIndex];
+      let i = 0;
+      target.textContent = '';
+      const interval = setInterval(() => {
+        target.textContent += text[i];
+        i++;
+        if (i >= text.length) {
+          clearInterval(interval);
+          setTimeout(() => {
+            gsap.to(target, {
+              opacity: 0,
+              duration: 0.3,
+              onComplete: () => {
+                lineIndex = (lineIndex + 1) % lines.length;
+                gsap.to(target, { opacity: 1, duration: 0.3 });
+                type();
+              },
+            });
+          }, 1800);
+        }
+      }, 45);
+    };
+    type();
+  }
+
+  typeLoop();
+
+  gsap.fromTo(
+    '#terminal p',
+    { opacity: 0, x: -10 },
+    { opacity: 1, x: 0, duration: 0.5, stagger: 0.12, ease: 'power2.out', delay: 0.4 }
+  );
+</script>
+
+<style>
+  .cursor {
+    animation: blink 1s step-end infinite;
+    color: #ff5a1f;
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+</style>

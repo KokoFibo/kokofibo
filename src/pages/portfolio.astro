@@ -1,0 +1,173 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import PortfolioCard from '../components/PortfolioCard.astro';
+import NetworkField from '../components/NetworkField.astro';
+
+const projects = [
+  {
+    category: 'trading',
+    kind: 'trading' as const,
+    tag: 'MT4 / MT5',
+    title: 'KokofiboSmartEntry EA',
+    description: 'Expert Advisor dengan multi-layer entry, lot multiplier yang bisa dikonfigurasi, dan auto-close berbasis virtual SL — kini di versi 4.9.',
+    stack: ['MQL4', 'MQL5', 'Risk Engine'],
+  },
+  {
+    category: 'trading',
+    kind: 'trading' as const,
+    tag: 'Scalping',
+    title: 'KokofiboScalpPro EA',
+    description: 'EA scalping dengan mirrored stop-loss, toggle auto-cutloss, dan tombol quick-set take-profit untuk eksekusi cepat.',
+    stack: ['MQL4', 'Scalping Logic'],
+  },
+  {
+    category: 'trading',
+    kind: 'trading' as const,
+    tag: 'MT4 → MT5',
+    title: 'DailyOpen_0515_WIB EA',
+    description: 'Strategi daily-open dengan logika trailing stop yang dimigrasikan dari MT4 ke MT5, termasuk pemisahan swap dari perhitungan profit dan logika reopen setelah close.',
+    stack: ['MQL4', 'MQL5', 'Trailing Stop'],
+  },
+  {
+    category: 'trading',
+    kind: 'trading' as const,
+    tag: 'Copy Trading',
+    title: 'MetaTrader Copy Trading (Master/Slave)',
+    description: 'Sistem copy trading lintas platform yang mereplikasi eksekusi dari akun master ke banyak akun slave secara real-time.',
+    stack: ['MT4', 'MT5', 'Cross-platform'],
+  },
+  {
+    category: 'hr',
+    kind: 'payroll' as const,
+    tag: 'Multi-brand',
+    title: 'Sistem HR & Payroll Yifang Group',
+    description: 'Automasi transfer karyawan antar-brand via API dengan autentikasi X-API-KEY, absensi otomatis, dan slip gaji — berjalan di beberapa subdomain sekaligus.',
+    stack: ['Laravel', 'MySQL', 'REST API'],
+  },
+  {
+    category: 'hr',
+    kind: 'payroll' as const,
+    tag: 'Reporting',
+    title: 'Salary Adjustment Report',
+    description: 'Fitur pelaporan penyesuaian gaji berbasis Laravel &amp; Livewire, terintegrasi dengan export Excel multi-header untuk kebutuhan finance.',
+    stack: ['Laravel', 'Livewire'],
+  },
+  {
+    category: 'hr',
+    kind: 'tax' as const,
+    tag: 'Kalkulator Pajak',
+    title: 'Kalkulator PPh 21 Kokofibo',
+    description: 'Kalkulator pajak penghasilan dengan visualisasi bracket dan perbandingan skema PT vs perorangan, lengkap dengan dark mode.',
+    stack: ['Vue 2', 'Tax Logic'],
+  },
+  {
+    category: 'web',
+    kind: 'web' as const,
+    tag: 'Landing Page',
+    title: 'Yifang Business Academy',
+    description: 'Landing page program karier untuk yifang.co.id — dirancang untuk konversi pendaftaran dengan struktur informasi yang jelas.',
+    stack: ['Web', 'Marketing Page'],
+  },
+  {
+    category: 'ai',
+    kind: 'ai' as const,
+    tag: 'Agentic AI',
+    title: 'Instagram Content Pipeline (Multi-Agent)',
+    description: 'Pipeline konten berbasis n8n dengan agent berlapis: satu AI menulis caption, satu AI membuat gambar yang sesuai, dan satu AI menjadwalkan & mempublikasikan ke Instagram serta TikTok setiap hari.',
+    stack: ['n8n', 'LLM Agents', 'Image Generation API'],
+  },
+];
+
+const filters = [
+  { key: 'all', label: 'Semua' },
+  { key: 'trading', label: 'Trading Systems' },
+  { key: 'hr', label: 'HR & Payroll' },
+  { key: 'web', label: 'Web' },
+  { key: 'ai', label: 'AI Automation' },
+];
+---
+
+<BaseLayout
+  title="Portfolio"
+  description="Kumpulan sistem yang dibangun Kokofibo — Expert Advisor trading, sistem HR & payroll multi-brand, kalkulator pajak, hingga platform web."
+>
+  <section class="relative overflow-hidden pt-36 pb-16">
+    <NetworkField class="opacity-25" />
+    <div class="container-kf relative">
+      <span class="eyebrow reveal-up">Portfolio</span>
+      <h1 class="reveal-up mt-5 max-w-2xl text-balance font-display text-4xl font-semibold leading-tight text-paper sm:text-5xl">
+        Sistem nyata, bukan mockup.
+      </h1>
+      <p class="reveal-up mt-6 max-w-xl text-base leading-relaxed text-paper/60">
+        Setiap proyek di bawah ini sedang atau pernah berjalan di production — dari akun trading langsung sampai payroll bulanan karyawan.
+      </p>
+    </div>
+  </section>
+
+  <section class="relative border-t border-ink-line pb-28 pt-12">
+    <div class="container-kf">
+      <div class="reveal-up flex flex-wrap gap-3" role="tablist" aria-label="Filter kategori portfolio">
+        {filters.map((f, i) => (
+          <button
+            class="filter-btn tag-mono !py-2 !px-4 transition-colors data-[active=true]:!border-signal data-[active=true]:!text-signal"
+            data-filter={f.key}
+            data-active={i === 0 ? 'true' : 'false'}
+            type="button"
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
+      <div id="project-grid" class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {projects.map((p) => (
+          <div class="project-item" data-category={p.category}>
+            <PortfolioCard {...p} />
+          </div>
+        ))}
+      </div>
+
+      <p id="empty-state" class="hidden py-16 text-center font-mono text-sm text-paper/40">
+        Belum ada proyek di kategori ini.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('.filter-btn'));
+  const items = Array.from(document.querySelectorAll<HTMLElement>('.project-item'));
+  const emptyState = document.getElementById('empty-state');
+
+  function applyFilter(filter: string) {
+    let visibleCount = 0;
+    items.forEach((item) => {
+      const match = filter === 'all' || item.dataset.category === filter;
+      if (match) visibleCount++;
+      gsap.to(item, {
+        opacity: match ? 1 : 0,
+        scale: match ? 1 : 0.96,
+        duration: 0.35,
+        ease: 'power2.out',
+        onStart: () => {
+          if (match) item.style.display = '';
+        },
+        onComplete: () => {
+          if (!match) item.style.display = 'none';
+        },
+      });
+    });
+    emptyState?.classList.toggle('hidden', visibleCount !== 0);
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      buttons.forEach((b) => (b.dataset.active = 'false'));
+      btn.dataset.active = 'true';
+      applyFilter(btn.dataset.filter || 'all');
+    });
+  });
+</script>

@@ -1,0 +1,91 @@
+---
+// No backend included: on submit this composes a pre-filled email to
+// anton@kokofibo.com via mailto. Swap the handler in the script section
+// below for a real endpoint (Formspree, an Astro API route, etc.) when ready.
+---
+<form id="contact-form" class="reveal-up space-y-5" novalidate>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <label for="name" class="mb-2 block font-mono text-xs uppercase tracking-widest2 text-paper/50">Nama</label>
+      <input
+        id="name" name="name" type="text" required
+        class="w-full rounded-xl border border-ink-line bg-ink-soft px-4 py-3 text-sm text-paper placeholder:text-paper/30 focus:border-signal focus:outline-none"
+        placeholder="Nama lengkap"
+      />
+    </div>
+    <div>
+      <label for="email" class="mb-2 block font-mono text-xs uppercase tracking-widest2 text-paper/50">Email</label>
+      <input
+        id="email" name="email" type="email" required
+        class="w-full rounded-xl border border-ink-line bg-ink-soft px-4 py-3 text-sm text-paper placeholder:text-paper/30 focus:border-signal focus:outline-none"
+        placeholder="nama@perusahaan.com"
+      />
+    </div>
+  </div>
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <label for="company" class="mb-2 block font-mono text-xs uppercase tracking-widest2 text-paper/50">Perusahaan</label>
+      <input
+        id="company" name="company" type="text"
+        class="w-full rounded-xl border border-ink-line bg-ink-soft px-4 py-3 text-sm text-paper placeholder:text-paper/30 focus:border-signal focus:outline-none"
+        placeholder="Nama perusahaan (opsional)"
+      />
+    </div>
+    <div>
+      <label for="service" class="mb-2 block font-mono text-xs uppercase tracking-widest2 text-paper/50">Kebutuhan</label>
+      <select
+        id="service" name="service"
+        class="w-full rounded-xl border border-ink-line bg-ink-soft px-4 py-3 text-sm text-paper focus:border-signal focus:outline-none"
+      >
+        <option>Website / Aplikasi Bisnis</option>
+        <option>Trading System / Expert Advisor</option>
+        <option>HR & Payroll Automation</option>
+        <option>Otomasi Agentic AI</option>
+        <option>Konsultasi Lainnya</option>
+      </select>
+    </div>
+  </div>
+
+  <div>
+    <label for="message" class="mb-2 block font-mono text-xs uppercase tracking-widest2 text-paper/50">Ceritakan proyek Anda</label>
+    <textarea
+      id="message" name="message" rows="5" required
+      class="w-full rounded-xl border border-ink-line bg-ink-soft px-4 py-3 text-sm text-paper placeholder:text-paper/30 focus:border-signal focus:outline-none"
+      placeholder="Apa yang ingin dibangun, target waktu, dan hal lain yang perlu kami tahu..."
+    ></textarea>
+  </div>
+
+  <button type="submit" class="btn-primary w-full sm:w-auto">
+    Kirim Pesan
+  </button>
+
+  <p id="form-status" class="hidden font-mono text-xs text-signal" role="status"></p>
+</form>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('form-status');
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const name = data.get('name');
+    const email = data.get('email');
+    const company = data.get('company') || '-';
+    const service = data.get('service');
+    const message = data.get('message');
+
+    const subject = encodeURIComponent(`Proyek baru dari ${name} — ${service}`);
+    const body = encodeURIComponent(
+      `Nama: ${name}\nEmail: ${email}\nPerusahaan: ${company}\nKebutuhan: ${service}\n\nPesan:\n${message}`
+    );
+
+    if (status) {
+      status.textContent = 'Membuka aplikasi email Anda...';
+      status.classList.remove('hidden');
+    }
+
+    window.location.href = `mailto:anton@kokofibo.com?subject=${subject}&body=${body}`;
+  });
+</script>

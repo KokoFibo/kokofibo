@@ -1,0 +1,54 @@
+---
+interface Props {
+  name: string;
+  price: string;
+  period?: string;
+  description: string;
+  features: string[];
+  featured?: boolean;
+  ctaLabel?: string;
+}
+const {
+  name,
+  price,
+  period = 'proyek',
+  description,
+  features,
+  featured = false,
+  ctaLabel = 'Diskusikan Proyek',
+} = Astro.props;
+---
+<div class={`relative flex h-full flex-col rounded-2xl p-8 ${
+  featured
+    ? 'border-2 border-signal bg-ink-raised shadow-glow'
+    : 'border border-ink-line bg-ink-soft'
+}`}>
+  {featured && (
+    <span class="absolute -top-3 left-8 rounded-full bg-signal-gradient px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest2 text-ink">
+      Paling Dipilih
+    </span>
+  )}
+  <p class="font-mono text-xs uppercase tracking-widest2 text-signal">{name}</p>
+  <div class="mt-4 flex items-baseline gap-2">
+    <span class="font-display text-3xl font-semibold text-paper sm:text-4xl">{price}</span>
+    <span class="text-sm text-paper/40">/ {period}</span>
+  </div>
+  <p class="mt-4 text-sm leading-relaxed text-paper/60">{description}</p>
+
+  <div class="divider-line my-6"></div>
+
+  <ul class="flex-1 space-y-3.5">
+    {features.map((f) => (
+      <li class="flex items-start gap-3 text-sm text-paper/75">
+        <svg class="mt-0.5 h-4 w-4 shrink-0 text-signal" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8.5L6.2 11.5L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {f}
+      </li>
+    ))}
+  </ul>
+
+  <a href="/contact" class={`mt-8 w-full text-center ${featured ? 'btn-primary' : 'btn-ghost'}`}>
+    {ctaLabel}
+  </a>
+</div>

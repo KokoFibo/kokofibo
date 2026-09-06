@@ -1,0 +1,18 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+<div class={`flex items-center gap-2.5 ${className}`}>
+  <svg width="30" height="30" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="64" height="64" rx="14" fill="#0A0A0C" stroke="#28282F"/>
+    <path d="M20 14V50" stroke="#F8F6F2" stroke-width="5" stroke-linecap="round"/>
+    <path d="M20 33L38 14" stroke="#FF5A1F" stroke-width="5" stroke-linecap="round"/>
+    <path d="M20 33L40 50" stroke="#FF5A1F" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="46" cy="18" r="3" fill="#FFA23D"/>
+  </svg>
+  <span class="font-display text-lg font-semibold tracking-tight text-paper">
+    Koko<span class="text-signal">fibo</span>
+  </span>
+</div>

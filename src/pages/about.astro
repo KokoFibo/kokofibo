@@ -1,0 +1,148 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import NetworkField from '../components/NetworkField.astro';
+
+const values = [
+  {
+    title: 'Sistem, bukan sekadar tampilan',
+    desc: 'Desain yang bagus tidak berarti apa-apa kalau logikanya rapuh. Kami memprioritaskan sistem yang stabil di balik layar.',
+  },
+  {
+    title: 'Iteratif, bukan sekali jadi',
+    desc: 'Setiap produk — dari EA trading sampai sistem payroll — dikembangkan bertahap lewat versi demi versi berdasarkan penggunaan nyata.',
+  },
+  {
+    title: 'Paham konteks bisnis',
+    desc: 'Kami turun sampai ke detail: aturan lembur, skema PPh 21, sampai perilaku market — bukan cuma menerima spesifikasi.',
+  },
+  {
+    title: 'Tetap bisa dirawat',
+    desc: 'Kode yang rapi dan terdokumentasi supaya sistem tetap bisa dikembangkan tim Anda sendiri di masa depan.',
+  },
+];
+
+const expertise = [
+  { group: 'Web & Backend', items: ['Rust', 'Go Lang', 'Laravel', 'Livewire', 'Vue.js', 'MySQL', 'REST API'] },
+  { group: 'Agentic AI', items: ['Hermes', 'n8n', 'LangChain', 'Claude', 'OpenAI / GPT API', 'Vector Database', 'Python'] },
+  { group: 'Trading Systems', items: ['MQL4 / MQL5', 'MT4 / MT5', 'Risk Management Logic', 'Copy Trading'] },
+  { group: 'Frontend', items: ['Astro', 'Tailwind CSS', 'GSAP', 'Responsive Design'] },
+  { group: 'Business Systems', items: ['Payroll & PPh 21', 'HR Automation', 'Reporting & Excel Export'] },
+];
+---
+
+<BaseLayout
+  title="Tentang Kami"
+  description="Kokofibo didirikan oleh Anton Phan — software engineer yang membangun sistem HR, payroll, trading, dan platform web untuk berbagai brand."
+>
+  <section class="relative overflow-hidden pt-36 pb-20">
+    <NetworkField class="opacity-30" />
+    <div class="container-kf relative">
+      <span class="eyebrow reveal-up">Tentang Kami</span>
+      <h1 class="reveal-up mt-5 max-w-3xl text-balance font-display text-4xl font-semibold leading-tight text-paper sm:text-5xl">
+        Studio kecil yang membangun sistem untuk masalah yang nyata.
+      </h1>
+      <p class="reveal-up mt-6 max-w-2xl text-base leading-relaxed text-paper/60 sm:text-lg">
+        Kokofibo lahir dari kebutuhan langsung: mengelola payroll lintas brand, menjalankan strategi trading
+        secara otomatis, dan membangun platform bisnis yang benar-benar dipakai sehari-hari — bukan proyek
+        yang selesai di demo lalu ditinggalkan.
+      </p>
+    </div>
+  </section>
+
+  <!-- FOUNDER -->
+  <section class="section-pad relative border-t border-ink-line">
+    <div class="container-kf grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+      <div class="reveal-up relative mx-auto w-full max-w-sm">
+        <div class="relative overflow-hidden rounded-2xl border border-ink-line bg-ink-soft">
+          <svg viewBox="0 0 400 480" class="h-full w-full">
+            <rect width="400" height="480" fill="#131317"/>
+            <g class="bg-node-grid"></g>
+            <circle cx="200" cy="180" r="86" fill="none" stroke="#28282F" stroke-width="2"/>
+            <path d="M120 380C120 300 155 250 200 250C245 250 280 300 280 380" fill="none" stroke="#FF5A1F" stroke-width="3"/>
+            <circle cx="200" cy="180" r="60" fill="#1B1B20" stroke="#FF5A1F" stroke-width="2.5"/>
+            <path d="M175 170q25 -22 50 0" stroke="#FFA23D" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <circle cx="176" cy="185" r="4" fill="#F8F6F2"/>
+            <circle cx="224" cy="185" r="4" fill="#F8F6F2"/>
+          </svg>
+        </div>
+        <div class="absolute -bottom-5 -right-5 rounded-xl border border-ink-line bg-ink px-4 py-3 shadow-glow">
+          <p class="font-mono text-[11px] uppercase tracking-widest2 text-signal">Founder</p>
+          <p class="font-display text-sm font-semibold text-paper">Anton Phan</p>
+        </div>
+      </div>
+
+      <div class="reveal-up">
+        <span class="eyebrow">Founder</span>
+        <h2 class="mt-4 font-display text-3xl font-semibold text-paper sm:text-4xl">Anton Phan</h2>
+        <p class="mt-5 text-base leading-relaxed text-paper/65">
+          Anton adalah software engineer yang membangun dan merawat sistemnya sendiri — dari aplikasi HR &amp;
+          payroll berbasis Laravel untuk grup multi-brand, hingga Expert Advisor MT4/MT5 untuk automasi trading.
+          Kokofibo dimulai sebagai kumpulan tools internal, dan berkembang menjadi studio yang membantu bisnis
+          lain membangun sistem serupa.
+        </p>
+        <p class="mt-4 text-base leading-relaxed text-paper/65">
+          Pendekatannya praktis: memahami dulu proses bisnis dan data yang sebenarnya berjalan, baru merancang
+          sistemnya — bukan sebaliknya.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <span class="tag-mono">Full-stack Developer</span>
+          <span class="tag-mono">Trading Systems</span>
+          <span class="tag-mono">HR &amp; Payroll Systems</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section class="section-pad relative border-t border-ink-line bg-ink-soft/40">
+    <div class="container-kf">
+      <SectionHeading
+        eyebrow="Prinsip Kerja"
+        title="Empat hal yang tidak kami kompromikan."
+        align="center"
+        class="!mx-auto"
+      />
+      <div class="reveal-stagger mt-14 grid gap-5 sm:grid-cols-2">
+        {values.map((v) => (
+          <div class="card-kf">
+            <h3 class="font-display text-lg font-semibold text-paper">{v.title}</h3>
+            <p class="mt-3 text-sm leading-relaxed text-paper/60">{v.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERTISE -->
+  <section class="section-pad relative border-t border-ink-line">
+    <div class="container-kf">
+      <SectionHeading
+        eyebrow="Kompetensi Teknis"
+        title="Tools dan teknologi yang kami pakai sehari-hari."
+      />
+      <div class="reveal-stagger mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {expertise.map((e) => (
+          <div class="rounded-2xl border border-ink-line bg-ink-soft p-6">
+            <p class="font-mono text-[11px] uppercase tracking-widest2 text-signal">{e.group}</p>
+            <ul class="mt-4 space-y-2.5">
+              {e.items.map((item) => (
+                <li class="text-sm text-paper/70">{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-pad relative border-t border-ink-line text-center">
+    <div class="container-kf reveal-up">
+      <h2 class="mx-auto max-w-xl text-balance font-display text-3xl font-semibold text-paper sm:text-4xl">
+        Ingin berdiskusi soal sistem yang sedang Anda pikirkan?
+      </h2>
+      <a href="/contact" class="btn-primary mt-8 inline-flex">Hubungi Anton &amp; Tim</a>
+    </div>
+  </section>
+</BaseLayout>

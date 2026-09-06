@@ -1,0 +1,74 @@
+---
+import LogoMark from './LogoMark.astro';
+
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    title: 'Navigasi',
+    links: [
+      { href: '/about', label: 'Tentang Kami' },
+      { href: '/portfolio', label: 'Portfolio' },
+      { href: '/pricing', label: 'Harga' },
+      { href: '/contact', label: 'Kontak' },
+    ],
+  },
+  {
+    title: 'Layanan',
+    links: [
+      { href: '/pricing#web', label: 'Web & Aplikasi Bisnis' },
+      { href: '/pricing#trading', label: 'Trading System / EA' },
+      { href: '/pricing#hr', label: 'HR & Payroll Automation' },
+      { href: '/pricing#ai', label: 'Otomasi Agentic AI' },
+      { href: '/pricing#support', label: 'Maintenance & Support' },
+    ],
+  },
+];
+---
+
+<footer class="relative overflow-hidden border-t border-ink-line bg-ink-soft">
+  <div class="pointer-events-none absolute -bottom-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-signal/10 blur-[100px]"></div>
+  <div class="container-kf relative section-pad !py-16">
+    <div class="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div>
+        <LogoMark />
+        <p class="mt-4 max-w-xs text-sm leading-relaxed text-paper/60">
+          Kokofibo merancang dan membangun sistem digital — dari platform web bisnis, automasi HR &amp; payroll, hingga trading engine — untuk tim yang bergerak cepat.
+        </p>
+        <div class="mt-5 flex items-center gap-2">
+          <span class="eyebrow">Sistem Aktif</span>
+        </div>
+      </div>
+
+      {columns.map((col) => (
+        <div>
+          <p class="font-mono text-[11px] uppercase tracking-widest2 text-paper/40">{col.title}</p>
+          <ul class="mt-4 space-y-3">
+            {col.links.map((link) => (
+              <li>
+                <a href={link.href} class="text-sm text-paper/70 hover:text-signal">{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+
+      <div>
+        <p class="font-mono text-[11px] uppercase tracking-widest2 text-paper/40">Kontak</p>
+        <ul class="mt-4 space-y-3 text-sm text-paper/70">
+          <li><a href="mailto:anton@kokofibo.com" class="hover:text-signal">anton@kokofibo.com</a></li>
+          <li><a href="https://wa.me/6281726588836" class="hover:text-signal">+62 817-2658-8836</a></li>
+          <li>Indonesia (Remote-first)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="divider-line my-10"></div>
+
+    <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
+      <p class="font-mono text-xs text-paper/40">
+        © {year} Kokofibo. Dibangun oleh Anton Phan &amp; tim.
+      </p>
+    </div>
+  </div>
+</footer>

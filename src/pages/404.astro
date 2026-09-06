@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NetworkField from '../components/NetworkField.astro';
+---
+<BaseLayout title="404 — Halaman Tidak Ditemukan" description="Halaman yang Anda cari tidak ditemukan di kokofibo.com.">
+  <section class="relative flex min-h-[80vh] items-center justify-center overflow-hidden pt-24 text-center">
+    <NetworkField class="opacity-30" />
+    <div class="container-kf relative">
+      <span class="eyebrow justify-center">Error 404</span>
+      <h1 class="mt-5 font-display text-5xl font-semibold text-paper sm:text-7xl">
+        <span class="text-signal">404</span> / not found
+      </h1>
+      <p class="mx-auto mt-5 max-w-md text-paper/60">
+        Sistem yang Anda cari tidak ada — atau mungkin sudah dipindahkan.
+      </p>
+      <a href="/" class="btn-primary mt-8 inline-flex">Kembali ke Beranda</a>
+    </div>
+  </section>
+</BaseLayout>

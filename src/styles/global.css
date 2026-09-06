@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-ink-line;
+  }
+  html {
+    @apply scroll-smooth;
+  }
+  body {
+    @apply bg-ink text-paper font-body antialiased selection:bg-signal selection:text-ink;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a0a0c;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #28282f;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ff5a1f;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+  a {
+    @apply transition-colors duration-200;
+  }
+  :focus-visible {
+    outline: 2px solid #ff5a1f;
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .container-kf {
+    @apply mx-auto w-full max-w-7xl px-6 sm:px-8 lg:px-10;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest2 text-signal;
+  }
+
+  .eyebrow::before {
+    content: '';
+    @apply block h-1.5 w-1.5 rounded-full bg-signal shadow-glow;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-signal-gradient px-6 py-3 font-display text-sm font-semibold text-ink transition-transform duration-200 hover:scale-[1.03] hover:shadow-glow active:scale-[0.98];
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink-line px-6 py-3 font-display text-sm font-semibold text-paper transition-colors duration-200 hover:border-signal hover:text-signal;
+  }
+
+  .card-kf {
+    @apply rounded-2xl border border-ink-line bg-ink-soft p-6 transition-all duration-300 hover:border-signal/60 hover:bg-ink-raised;
+  }
+
+  .section-pad {
+    @apply py-20 sm:py-28;
+  }
+
+  .divider-line {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-ink-line to-transparent;
+  }
+
+  .tag-mono {
+    @apply rounded-full border border-ink-line bg-ink-raised px-3 py-1 font-mono text-[11px] uppercase tracking-widest2 text-paper/70;
+  }
+
+  .bg-node-grid {
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

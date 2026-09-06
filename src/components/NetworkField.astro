@@ -1,0 +1,99 @@
+---
+// Signature ambient element: a constellation of connected nodes representing
+// Kokofibo's systems (trading engines, payroll/HR platforms, web apps) working
+// together. Animated with GSAP — pulsing nodes + slow-drawing connective lines.
+interface Props {
+  class?: string;
+  density?: 'default' | 'dense';
+}
+const { class: className = '', density = 'default' } = Astro.props;
+
+const nodesDefault = [
+  { x: 60, y: 90 }, { x: 220, y: 40 }, { x: 380, y: 110 }, { x: 520, y: 55 },
+  { x: 660, y: 140 }, { x: 150, y: 220 }, { x: 340, y: 250 }, { x: 500, y: 200 },
+  { x: 640, y: 260 }, { x: 90, y: 300 }, { x: 430, y: 330 }, { x: 590, y: 320 },
+];
+
+const edgesDefault = [
+  [0,1],[1,2],[2,3],[3,4],[1,5],[2,6],[3,7],[4,8],[5,6],[6,7],[7,8],
+  [5,9],[6,10],[7,11],[10,11],[9,5],
+];
+
+const nodes = nodesDefault;
+const edges = edgesDefault;
+---
+
+<div class={`network-field pointer-events-none absolute inset-0 overflow-hidden ${className}`} aria-hidden="true">
+  <svg viewBox="0 0 700 380" preserveAspectRatio="xMidYMid slice" class="h-full w-full opacity-70">
+    <g stroke="#FF5A1F" stroke-width="1" fill="none">
+      {edges.map(([a, b]) => (
+        <line
+          class="nf-edge"
+          x1={nodes[a].x} y1={nodes[a].y}
+          x2={nodes[b].x} y2={nodes[b].y}
+          stroke-opacity="0.18"
+        />
+      ))}
+    </g>
+    <g>
+      {nodes.map((n, i) => (
+        <circle
+          class="nf-node"
+          cx={n.x} cy={n.y}
+          r={i % 3 === 0 ? 3.4 : 2.2}
+          fill={i % 4 === 0 ? '#FFA23D' : '#FF5A1F'}
+        />
+      ))}
+    </g>
+  </svg>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const initNetworkFields = () => {
+    document.querySelectorAll('.network-field').forEach((field) => {
+      const nodesEls = field.querySelectorAll('.nf-node');
+      const edgesEls = field.querySelectorAll('.nf-edge');
+
+      gsap.set(edgesEls, {
+        strokeDasharray: (i, el) => {
+          const len = (el as SVGLineElement).getTotalLength ? Math.hypot(
+            Number(el.getAttribute('x2')) - Number(el.getAttribute('x1')),
+            Number(el.getAttribute('y2')) - Number(el.getAttribute('y1'))
+          ) : 200;
+          return len;
+        },
+        strokeDashoffset: (i, el) => {
+          return Math.hypot(
+            Number(el.getAttribute('x2')) - Number(el.getAttribute('x1')),
+            Number(el.getAttribute('y2')) - Number(el.getAttribute('y1'))
+          );
+        },
+      });
+
+      gsap.to(edgesEls, {
+        strokeDashoffset: 0,
+        duration: 1.8,
+        stagger: 0.05,
+        ease: 'power2.out',
+        delay: 0.2,
+      });
+
+      gsap.to(nodesEls, {
+        scale: 1.6,
+        transformOrigin: 'center',
+        opacity: 0.5,
+        duration: 2.2,
+        ease: 'sine.inOut',
+        stagger: { each: 0.15, repeat: -1, yoyo: true },
+        repeat: -1,
+        yoyo: true,
+      });
+    });
+  };
+
+  if (document.readyState !== 'loading') initNetworkFields();
+  else document.addEventListener('DOMContentLoaded', initNetworkFields);
+  document.addEventListener('astro:page-load', initNetworkFields);
+</script>

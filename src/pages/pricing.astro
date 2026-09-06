@@ -1,0 +1,215 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import PricingCard from '../components/PricingCard.astro';
+import NetworkField from '../components/NetworkField.astro';
+
+const tabs = [
+  { key: 'web', label: 'Web & Aplikasi Bisnis' },
+  { key: 'trading', label: 'Trading System / EA' },
+  { key: 'hr', label: 'HR & Payroll' },
+  { key: 'ai', label: 'Otomasi Agentic AI' },
+  { key: 'support', label: 'Maintenance & Support' },
+];
+
+const plans = {
+  web: [
+    {
+      name: 'Landing Page',
+      price: 'Rp 5jt',
+      description: 'Satu halaman company profile atau produk, siap dipakai untuk kebutuhan marketing.',
+      features: ['1 halaman, desain custom', 'Mobile friendly & SEO dasar', 'Form kontak', 'Revisi 2x'],
+    },
+    {
+      name: 'Business Website',
+      price: 'Rp 15jt',
+      description: 'Website multi-halaman untuk perusahaan yang butuh presence lengkap.',
+      features: ['5–8 halaman custom', 'CMS sederhana untuk konten', 'SEO on-page penuh', 'Animasi & interaksi', 'Revisi 3x'],
+      featured: true,
+    },
+    {
+      name: 'Custom Web App',
+      price: 'Mulai Rp 35jt',
+      description: 'Dashboard atau aplikasi internal dengan logika bisnis dan integrasi data.',
+      features: ['Arsitektur & database custom', 'Autentikasi & role akses', 'Integrasi API', 'Sesi discovery mendalam'],
+    },
+  ],
+  trading: [
+    {
+      name: 'EA Standar',
+      price: 'Mulai Rp 8jt',
+      description: 'Expert Advisor dari strategi yang sudah Anda tentukan, siap dijalankan di MT4/MT5.',
+      features: ['1 strategi entry', 'Risk & money management dasar', 'Testing di akun demo', 'Dokumentasi parameter'],
+    },
+    {
+      name: 'EA + Copy Trading',
+      price: 'Mulai Rp 18jt',
+      description: 'EA custom lengkap dengan setup copy trading Master/Slave untuk banyak akun.',
+      features: ['Multi-layer entry logic', 'Copy trading lintas akun', 'Panel kontrol custom', 'Auto-close & trailing stop'],
+      featured: true,
+    },
+    {
+      name: 'Enterprise Trading System',
+      price: 'Custom',
+      description: 'Sistem trading skala besar dengan monitoring, multi-strategi, dan infrastruktur khusus.',
+      features: ['Multi-strategi & multi-akun', 'Monitoring & alert real-time', 'SLA & maintenance berkala'],
+    },
+  ],
+  hr: [
+    {
+      name: 'HR Module Setup',
+      price: 'Mulai Rp 12jt',
+      description: 'Modul HR dasar: data karyawan, absensi, dan struktur organisasi.',
+      features: ['Database karyawan', 'Absensi otomatis', 'Struktur organisasi & role'],
+    },
+    {
+      name: 'Payroll Automation',
+      price: 'Mulai Rp 25jt',
+      description: 'Perhitungan gaji otomatis lengkap dengan PPh 21 dan slip gaji digital.',
+      features: ['Perhitungan payroll & PPh 21', 'Slip gaji digital', 'Export laporan Excel', 'Approval berjenjang'],
+      featured: true,
+    },
+    {
+      name: 'Multi-brand Enterprise',
+      price: 'Custom',
+      description: 'Sistem HR & payroll terpusat untuk grup dengan beberapa brand/subdomain.',
+      features: ['Transfer karyawan antar-brand', 'API terpusat multi-subdomain', 'Reporting konsolidasi'],
+    },
+  ],
+  ai: [
+    {
+      name: 'AI Chatbot Starter',
+      price: 'Mulai Rp 10jt',
+      description: 'Chatbot AI untuk satu channel (WhatsApp/website) dengan skenario percakapan yang sudah ditentukan.',
+      features: ['1 channel (WhatsApp/web)', 'Skenario percakapan custom', 'Koneksi ke 1 sumber data', 'Testing & handover'],
+    },
+    {
+      name: 'Agentic Workflow',
+      price: 'Mulai Rp 22jt',
+      description: 'Pipeline multi-agent untuk pekerjaan berulang: konten, riset, atau respons pelanggan yang berjalan otomatis harian.',
+      features: ['Multi-agent workflow (n8n)', 'Integrasi LLM (OpenAI/Gemini/Claude)', 'Penjadwalan otomatis', 'Monitoring hasil agent'],
+      featured: true,
+    },
+    {
+      name: 'Enterprise AI Automation',
+      price: 'Custom',
+      description: 'Automasi agentic skala penuh yang terhubung ke banyak sistem internal (CRM, database, WhatsApp, dsb).',
+      features: ['Arsitektur multi-agent kompleks', 'Integrasi ke sistem internal existing', 'SLA & maintenance berkala'],
+    },
+  ],
+  support: [
+    {
+      name: 'Basic',
+      price: 'Rp 1.5jt',
+      period: 'bulan',
+      description: 'Untuk website atau sistem kecil yang butuh pemantauan ringan.',
+      features: ['Monitoring uptime', 'Bug fixing minor', 'Respon 2x24 jam'],
+    },
+    {
+      name: 'Standard',
+      price: 'Rp 3.5jt',
+      period: 'bulan',
+      description: 'Untuk sistem yang aktif digunakan harian dan butuh perhatian rutin.',
+      features: ['Monitoring & optimasi performa', 'Bug fixing prioritas', 'Perubahan kecil bulanan', 'Respon 1x24 jam'],
+      featured: true,
+    },
+    {
+      name: 'Priority',
+      price: 'Custom',
+      description: 'Untuk sistem kritikal seperti payroll atau trading engine yang berjalan 24 jam.',
+      features: ['Monitoring real-time', 'Respon prioritas < 4 jam', 'Slot pengembangan rutin'],
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="Harga"
+  description="Paket harga Kokofibo untuk pengembangan website, trading system, HR & payroll automation, hingga maintenance berkala."
+>
+  <section class="relative overflow-hidden pt-36 pb-16">
+    <NetworkField class="opacity-25" />
+    <div class="container-kf relative">
+      <span class="eyebrow reveal-up">Harga</span>
+      <h1 class="reveal-up mt-5 max-w-2xl text-balance font-display text-4xl font-semibold leading-tight text-paper sm:text-5xl">
+        Paket yang jelas, tanpa biaya tersembunyi.
+      </h1>
+      <p class="reveal-up mt-6 max-w-xl text-base leading-relaxed text-paper/60">
+        Harga di bawah adalah titik awal. Setiap proyek tetap kami diskusikan dulu supaya penawaran sesuai kebutuhan sebenarnya.
+      </p>
+    </div>
+  </section>
+
+  <section class="relative border-t border-ink-line pb-28 pt-12">
+    <div class="container-kf">
+      <div class="reveal-up flex flex-wrap gap-3" role="tablist" aria-label="Kategori harga">
+        {tabs.map((t, i) => (
+          <button
+            class="pricing-tab tag-mono !py-2 !px-4 transition-colors data-[active=true]:!border-signal data-[active=true]:!text-signal"
+            data-tab={t.key}
+            data-active={i === 0 ? 'true' : 'false'}
+            id={t.key}
+            type="button"
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tabs.map((t, i) => (
+        <div class="pricing-panel mt-12 grid gap-6 md:grid-cols-3" data-panel={t.key} style={i === 0 ? '' : 'display:none'}>
+          {plans[t.key as keyof typeof plans].map((p) => <PricingCard {...p} />)}
+        </div>
+      ))}
+
+      <p class="reveal-up mt-14 text-center font-mono text-xs text-paper/35">
+        * Semua harga dalam Rupiah, tidak termasuk PPN. Estimasi timeline diberikan setelah scope disepakati.
+      </p>
+    </div>
+  </section>
+
+  <section class="relative border-t border-ink-line py-20 text-center">
+    <div class="container-kf reveal-up">
+      <h2 class="mx-auto max-w-xl text-balance font-display text-3xl font-semibold text-paper sm:text-4xl">
+        Tidak yakin paket mana yang cocok?
+      </h2>
+      <p class="mx-auto mt-4 max-w-md text-paper/60">
+        Ceritakan kebutuhan Anda, kami bantu rekomendasikan paket yang paling pas.
+      </p>
+      <a href="/contact" class="btn-primary mt-8 inline-flex">Konsultasi Gratis</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const tabButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.pricing-tab'));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('.pricing-panel'));
+
+  function activate(key: string) {
+    tabButtons.forEach((b) => (b.dataset.active = String(b.dataset.tab === key)));
+    panels.forEach((panel) => {
+      if (panel.dataset.panel === key) {
+        panel.style.display = '';
+        gsap.fromTo(panel.children, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.08, ease: 'power2.out' });
+      } else {
+        panel.style.display = 'none';
+      }
+    });
+  }
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const key = btn.dataset.tab || 'web';
+      activate(key);
+      history.replaceState(null, '', `#${key}`);
+    });
+  });
+
+  const initialHash = window.location.hash.replace('#', '');
+  if (initialHash && tabButtons.some((b) => b.dataset.tab === initialHash)) {
+    activate(initialHash);
+  }
+</script>
