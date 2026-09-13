@@ -4,6 +4,7 @@ import NetworkField from '../components/NetworkField.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import PortfolioCard from '../components/PortfolioCard.astro';
+import TestimonialVideo from '../components/TestimonialVideo.astro';
 
 const services = [
   {
@@ -49,9 +50,19 @@ const process = [
 ---
 
 <BaseLayout
-  title="Kokofibo — Sistem Digital untuk Bisnis yang Bergerak Cepat"
-  description="Kokofibo membangun website bisnis, sistem HR & payroll, serta trading system untuk perusahaan yang butuh sistem yang benar-benar bekerja. Didirikan oleh Anton Phan."
+  title="Sistem Digital untuk Bisnis yang Bergerak Cepat"
+  description="Kokofibo membangun website bisnis, sistem HR & payroll, trading system, dan otomasi AI untuk perusahaan yang bergerak cepat. Didirikan oleh Anton Phan."
 >
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: 'Testimoni Ibu Maya — Pengusaha Cafe, PIK, Jakarta Utara',
+    description: 'Testimoni video dari Ibu Maya, pengusaha cafe di PIK, Jakarta Utara, tentang pengalamannya menggunakan layanan Kokofibo.',
+    thumbnailUrl: 'https://img.youtube.com/vi/kn2_txy5PIM/maxresdefault.jpg',
+    embedUrl: 'https://www.youtube-nocookie.com/embed/kn2_txy5PIM',
+    contentUrl: 'https://www.youtube.com/watch?v=kn2_txy5PIM',
+  })} />
+
   <!-- HERO -->
   <section class="relative flex min-h-[92vh] items-center overflow-hidden pt-28">
     <NetworkField class="opacity-80" />
@@ -171,6 +182,25 @@ const process = [
           title="Kalkulator PPh 21 Kokofibo"
           description="Kalkulator pajak penghasilan dengan visualisasi bracket dan perbandingan skema PT vs perorangan, lengkap dengan dark mode."
           stack={['Vue 2', 'Tax Logic', 'Dark Mode']}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section-pad relative border-t border-ink-line bg-ink-soft/40">
+    <div class="container-kf">
+      <SectionHeading
+        eyebrow="Testimoni"
+        title="Langsung dari klien yang memakainya."
+        align="center"
+        class="!mx-auto"
+      />
+      <div class="mt-14">
+        <TestimonialVideo
+          videoId="kn2_txy5PIM"
+          name="Ibu Maya"
+          role="Pengusaha Cafe, PIK — Jakarta Utara"
         />
       </div>
     </div>

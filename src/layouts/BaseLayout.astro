@@ -12,11 +12,12 @@ interface Props {
 const {
   title,
   description,
-  ogImage = '/images/og-cover.svg',
+  ogImage = '/images/og-cover.png',
 } = Astro.props;
 
 const siteName = 'Kokofibo';
-const fullTitle = title === siteName ? title : `${title} · ${siteName}`;
+const hasBrand = title.toLowerCase().includes(siteName.toLowerCase());
+const fullTitle = hasBrand ? title : `${title} · ${siteName}`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -25,7 +26,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonicalURL} />
 
     <title>{fullTitle}</title>
@@ -39,6 +44,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${siteName} — ${description}`} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:locale" content="id_ID" />
 
@@ -61,13 +69,26 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       '@type': 'Organization',
       name: 'Kokofibo',
       url: 'https://kokofibo.com',
+      logo: 'https://kokofibo.com/favicon-32x32.png',
+      image: 'https://kokofibo.com/images/og-cover.png',
+      email: 'anton@kokofibo.com',
+      telephone: '+62 817-2658-8836',
       founder: {
         '@type': 'Person',
         name: 'Anton Phan',
       },
       description:
-        'Kokofibo membangun sistem digital: platform web bisnis, automasi HR & payroll, dan trading system, untuk perusahaan yang bergerak cepat.',
+        'Kokofibo membangun sistem digital: platform web bisnis, automasi HR & payroll, trading system, dan otomasi agentic AI, untuk perusahaan yang bergerak cepat.',
     })} />
+
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-K0472YMGXG"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-K0472YMGXG');
+    </script>
   </head>
   <body class="bg-node-grid">
     <Header />

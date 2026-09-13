@@ -1,0 +1,123 @@
+---
+// Lite-embed pattern: only a thumbnail + play button load on page render.
+// The real YouTube iframe (youtube-nocookie.com) is injected on click, so
+// no YouTube JS/cookies load until the user actually wants to watch.
+interface Props {
+  videoId: string;
+  name: string;
+  role: string;
+}
+const { videoId, name, role } = Astro.props;
+const uid = `yt-${videoId}`;
+---
+
+<div class="reveal-up mx-auto w-full max-w-2xl">
+  <button
+    type="button"
+    class="testimonial-trigger group relative block w-full overflow-hidden rounded-2xl border border-ink-line bg-ink-soft"
+    data-video-id={videoId}
+    data-modal={uid}
+    aria-label={`Putar video testimoni ${name}`}
+  >
+    <div class="relative aspect-video w-full">
+      <img
+        src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+        onerror={`this.onerror=null;this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'`}
+        alt={`Testimoni video dari ${name}`}
+        loading="lazy"
+        class="h-full w-full object-cover opacity-80 transition-opacity duration-300 group-hover:opacity-95"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-transparent"></div>
+      <span class="absolute inset-0 flex items-center justify-center">
+        <span class="flex h-16 w-16 items-center justify-center rounded-full bg-signal-gradient shadow-glow transition-transform duration-300 group-hover:scale-110">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M6 4L18 11L6 18V4Z" fill="#0A0A0C" />
+          </svg>
+        </span>
+      </span>
+    </div>
+    <div class="flex items-center justify-between px-6 py-5">
+      <div class="text-left">
+        <p class="font-display text-base font-semibold text-paper">{name}</p>
+        <p class="text-sm text-paper/55">{role}</p>
+      </div>
+      <span class="tag-mono">YouTube</span>
+    </div>
+  </button>
+</div>
+
+<div
+  id={uid}
+  class="testimonial-modal fixed inset-0 z-[100] hidden items-center justify-center bg-ink/90 p-4 backdrop-blur-sm"
+  role="dialog"
+  aria-modal="true"
+  aria-label={`Video testimoni ${name}`}
+>
+  <div class="relative w-full max-w-3xl">
+    <button
+      type="button"
+      class="modal-close absolute -top-11 right-0 flex h-9 w-9 items-center justify-center rounded-full border border-ink-line text-paper/70 hover:border-signal hover:text-signal"
+      aria-label="Tutup video"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M2 2L14 14M14 2L2 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="modal-frame aspect-video w-full overflow-hidden rounded-2xl border border-ink-line bg-ink"></div>
+  </div>
+</div>
+
+<script>
+  function initTestimonialVideos() {
+    document.querySelectorAll<HTMLButtonElement>('.testimonial-trigger').forEach((trigger) => {
+      if (trigger.dataset.bound === 'true') return;
+      trigger.dataset.bound = 'true';
+
+      trigger.addEventListener('click', () => {
+        const modalId = trigger.dataset.modal;
+        const videoId = trigger.dataset.videoId;
+        const modal = modalId ? document.getElementById(modalId) : null;
+        const frame = modal?.querySelector('.modal-frame');
+        if (!modal || !frame || !videoId) return;
+
+        frame.innerHTML = `<iframe
+          src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0"
+          title="YouTube video player"
+          class="h-full w-full"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>`;
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    document.querySelectorAll<HTMLElement>('.testimonial-modal').forEach((modal) => {
+      if (modal.dataset.bound === 'true') return;
+      modal.dataset.bound = 'true';
+
+      const close = () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        const frame = modal.querySelector('.modal-frame');
+        if (frame) frame.innerHTML = '';
+        document.body.style.overflow = '';
+      };
+
+      modal.querySelector('.modal-close')?.addEventListener('click', close);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) close();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') close();
+      });
+    });
+  }
+
+  if (document.readyState !== 'loading') initTestimonialVideos();
+  else document.addEventListener('DOMContentLoaded', initTestimonialVideos);
+  document.addEventListener('astro:page-load', initTestimonialVideos);
+</script>
