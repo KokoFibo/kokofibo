@@ -6,20 +6,21 @@ interface Props {
   videoId: string;
   name: string;
   role: string;
+  class?: string;
 }
-const { videoId, name, role } = Astro.props;
+const { videoId, name, role, class: className = 'mx-auto w-full max-w-2xl' } = Astro.props;
 const uid = `yt-${videoId}`;
 ---
 
-<div class="reveal-up mx-auto w-full max-w-2xl">
+<div class={`reveal-up flex h-full ${className}`}>
   <button
     type="button"
-    class="testimonial-trigger group relative block w-full overflow-hidden rounded-2xl border border-ink-line bg-ink-soft"
+    class="testimonial-trigger group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-ink-line bg-ink-soft"
     data-video-id={videoId}
     data-modal={uid}
     aria-label={`Putar video testimoni ${name}`}
   >
-    <div class="relative aspect-video w-full">
+    <div class="relative aspect-video w-full shrink-0">
       <img
         src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
         onerror={`this.onerror=null;this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'`}
@@ -36,12 +37,12 @@ const uid = `yt-${videoId}`;
         </span>
       </span>
     </div>
-    <div class="flex items-center justify-between px-6 py-5">
+    <div class="flex flex-1 items-center justify-between gap-3 px-6 py-5">
       <div class="text-left">
         <p class="font-display text-base font-semibold text-paper">{name}</p>
         <p class="text-sm text-paper/55">{role}</p>
       </div>
-      <span class="tag-mono">YouTube</span>
+      <span class="tag-mono shrink-0">YouTube</span>
     </div>
   </button>
 </div>

@@ -47,6 +47,27 @@ const process = [
   { n: '03', title: 'Build & Test', desc: 'Pengembangan iteratif dengan pengujian di setiap tahap — bukan sekali jadi di akhir.' },
   { n: '04', title: 'Ship & Support', desc: 'Deploy ke production, lalu pendampingan aktif untuk perbaikan dan penyesuaian.' },
 ];
+
+const testimonials = [
+  {
+    videoId: 'RJ90hp53Z0Y',
+    name: 'Ibu Maya',
+    role: 'Pemilik Cafe, PIK — Jakarta Utara',
+    description: 'Testimoni video dari Ibu Maya, pemilik cafe di PIK, Jakarta Utara, tentang pengalamannya menggunakan layanan Kokofibo.',
+  },
+  {
+    videoId: 'aTFkmMQvDPE',
+    name: 'Sander',
+    role: 'Dutch Professional Photographer, Bali',
+    description: 'Testimoni video dari Sander, fotografer profesional asal Belanda yang berbasis di Bali, tentang pengalamannya menggunakan layanan Kokofibo.',
+  },
+  {
+    videoId: 'GFWJvNzlah4',
+    name: 'Rachel',
+    role: 'Catering Business, Singapore',
+    description: 'Testimoni video dari Rachel, pemilik bisnis catering di Singapura, tentang pengalamannya menggunakan layanan Kokofibo.',
+  },
+];
 ---
 
 <BaseLayout
@@ -55,12 +76,14 @@ const process = [
 >
   <script type="application/ld+json" set:html={JSON.stringify({
     '@context': 'https://schema.org',
-    '@type': 'VideoObject',
-    name: 'Testimoni Ibu Maya — Pengusaha Cafe, PIK, Jakarta Utara',
-    description: 'Testimoni video dari Ibu Maya, pengusaha cafe di PIK, Jakarta Utara, tentang pengalamannya menggunakan layanan Kokofibo.',
-    thumbnailUrl: 'https://img.youtube.com/vi/kn2_txy5PIM/maxresdefault.jpg',
-    embedUrl: 'https://www.youtube-nocookie.com/embed/kn2_txy5PIM',
-    contentUrl: 'https://www.youtube.com/watch?v=kn2_txy5PIM',
+    '@graph': testimonials.map((t) => ({
+      '@type': 'VideoObject',
+      name: `Testimoni ${t.name} — ${t.role}`,
+      description: t.description,
+      thumbnailUrl: `https://img.youtube.com/vi/${t.videoId}/maxresdefault.jpg`,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${t.videoId}`,
+      contentUrl: `https://www.youtube.com/watch?v=${t.videoId}`,
+    })),
   })} />
 
   <!-- HERO -->
@@ -196,12 +219,10 @@ const process = [
         align="center"
         class="!mx-auto"
       />
-      <div class="mt-14">
-        <TestimonialVideo
-          videoId="kn2_txy5PIM"
-          name="Ibu Maya"
-          role="Pengusaha Cafe, PIK — Jakarta Utara"
-        />
+      <div class="reveal-stagger mt-14 grid gap-6 md:grid-cols-3">
+        {testimonials.map((t) => (
+          <TestimonialVideo videoId={t.videoId} name={t.name} role={t.role} class="w-full" />
+        ))}
       </div>
     </div>
   </section>
