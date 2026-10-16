@@ -88,3 +88,54 @@
     text-wrap: balance;
   }
 }
+
+/* ───────── 3D scene (src/lib/scene) ───────── */
+[data-scene-root] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh; /* stable height: mobile toolbars must not resize the canvas */
+  z-index: -10;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+[data-scene-root] canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* Narrow screens: text spans the full width, so keep the scene subtle. */
+html.scene-3d [data-scene-root] {
+  opacity: 0.55;
+}
+/* Wide screens: scene lives on the right, left (text) side fades out. */
+@media (min-width: 1024px) {
+  [data-scene-root] {
+    -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.12) 0%, #000 42%);
+    mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.12) 0%, #000 42%);
+  }
+  html.scene-3d [data-scene-root] {
+    opacity: 1;
+  }
+}
+/* Static SVG fallback fades out once WebGL is rendering. */
+[data-scene-fallback] {
+  transition: opacity 1s ease;
+}
+html.scene-3d [data-scene-fallback] {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s ease, visibility 0s linear 1s;
+}
+
+/* Services cards turn into glass while the 3D scene runs, so each card's
+   node cluster shows through. Without WebGL the cards stay opaque. */
+html.scene-3d [data-scene="services"] .card-kf {
+  background-color: rgb(19 19 23 / 0.55);
+}
+html.scene-3d [data-scene="services"] .card-kf:hover {
+  background-color: rgb(27 27 32 / 0.42);
+}

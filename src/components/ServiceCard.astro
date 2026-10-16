@@ -1,13 +1,15 @@
 ---
 interface Props {
+  /** Hub id used by the 3D scene to attach a node cluster to this card. */
+  hub?: string;
   code: string;
   title: string;
   description: string;
   points: string[];
 }
-const { code, title, description, points } = Astro.props;
+const { hub, code, title, description, points } = Astro.props;
 ---
-<div class="card-kf group flex h-full flex-col">
+<div class="card-kf group flex h-full flex-col" data-hub={hub}>
   <div class="flex items-center justify-between">
     <span class="tag-mono">{code}</span>
     <svg class="h-4 w-4 text-paper/20 transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-signal" viewBox="0 0 16 16" fill="none">

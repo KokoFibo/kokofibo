@@ -5,33 +5,39 @@ import SectionHeading from '../components/SectionHeading.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import PortfolioCard from '../components/PortfolioCard.astro';
 import TestimonialVideo from '../components/TestimonialVideo.astro';
+import SceneCanvas from '../components/SceneCanvas.astro';
 
 const services = [
   {
+    hub: 'web',
     code: 'SVC.01 — WEB',
     title: 'Website & Aplikasi Bisnis',
     description: 'Platform company profile, dashboard internal, hingga aplikasi custom yang dibangun cepat dan mudah dirawat.',
     points: ['Company profile & landing page', 'Web app / dashboard custom', 'Integrasi API pihak ketiga'],
   },
   {
+    hub: 'ai',
     code: 'SVC.02 — AI AGENT',
     title: 'Otomasi Agentic AI',
     description: 'AI agent yang benar-benar menjalankan pekerjaan: membalas chat pelanggan, memproses data, sampai mempublikasikan konten — tanpa campur tangan manual tiap hari.',
     points: ['Chatbot WhatsApp berbasis AI & konteks bisnis', 'Pipeline multi-agent (n8n + LLM)', 'Integrasi agent ke sistem & data internal'],
   },
   {
+    hub: 'trading',
     code: 'SVC.03 — TRADING',
     title: 'Trading System & Expert Advisor',
     description: 'Expert Advisor MT4/MT5 dari logika entry, risk management, hingga eksekusi otomatis dan multi-akun.',
     points: ['Strategi entry & multi-layer lot', 'Risk & money management', 'Copy trading Master/Slave'],
   },
   {
+    hub: 'hr',
     code: 'SVC.04 — HR/PAYROLL',
     title: 'HR & Payroll Automation',
     description: 'Sistem HR dan payroll untuk grup multi-brand: perhitungan gaji, absensi, hingga pelaporan pajak.',
     points: ['Perhitungan payroll & PPh 21', 'Absensi & transfer karyawan', 'Laporan cost & rekap otomatis'],
   },
   {
+    hub: 'support',
     code: 'SVC.05 — SUPPORT',
     title: 'Maintenance & Integrasi',
     description: 'Pendampingan pasca-launch: perbaikan bug, peningkatan performa, dan integrasi sistem baru ke sistem lama.',
@@ -86,9 +92,14 @@ const testimonials = [
     })),
   })} />
 
+  <SceneCanvas />
+
   <!-- HERO -->
-  <section class="relative flex min-h-[92vh] items-center overflow-hidden pt-28">
-    <NetworkField class="opacity-80" />
+  <section data-scene="hero" class="relative flex min-h-[92vh] items-center overflow-hidden pt-28">
+    <!-- Static fallback; hidden automatically once the 3D scene is running -->
+    <div data-scene-fallback class="absolute inset-0">
+      <NetworkField class="opacity-80" />
+    </div>
     <div class="pointer-events-none absolute inset-0 bg-grid-fade"></div>
 
     <div class="container-kf relative grid gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
@@ -131,13 +142,12 @@ const testimonials = [
             <p class="typing-line"><span class="text-signal">$</span> <span id="typing-target"></span><span class="cursor">▌</span></p>
           </div>
         </div>
-        <div class="absolute -bottom-6 -right-6 hidden h-24 w-24 rounded-2xl bg-signal-gradient opacity-90 shadow-glow sm:block"></div>
       </div>
     </div>
   </section>
 
   <!-- SERVICES -->
-  <section class="section-pad relative">
+  <section data-scene="services" class="section-pad relative">
     <div class="container-kf">
       <SectionHeading
         eyebrow="Layanan"
@@ -151,7 +161,7 @@ const testimonials = [
   </section>
 
   <!-- PROCESS -->
-  <section class="section-pad relative border-y border-ink-line bg-ink-soft/40">
+  <section data-scene="process" class="section-pad relative border-y border-ink-line bg-ink-soft/40">
     <div class="container-kf">
       <SectionHeading
         eyebrow="Cara Kerja"
@@ -159,7 +169,7 @@ const testimonials = [
       />
       <div class="reveal-stagger mt-14 grid gap-8 md:grid-cols-4">
         {process.map((p, i) => (
-          <div class="relative">
+          <div class="relative" data-stage={i}>
             <span class="font-mono text-sm text-signal">{p.n}</span>
             <h3 class="mt-3 font-display text-lg font-semibold text-paper">{p.title}</h3>
             <p class="mt-2 text-sm leading-relaxed text-paper/55">{p.desc}</p>
@@ -173,7 +183,7 @@ const testimonials = [
   </section>
 
   <!-- FEATURED PORTFOLIO -->
-  <section class="section-pad relative">
+  <section data-scene="portfolio" class="section-pad relative">
     <div class="container-kf">
       <div class="reveal-up flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
         <SectionHeading
@@ -211,7 +221,7 @@ const testimonials = [
   </section>
 
   <!-- TESTIMONIALS -->
-  <section class="section-pad relative border-t border-ink-line bg-ink-soft/40">
+  <section data-scene="testimonials" class="section-pad relative border-t border-ink-line bg-ink-soft/40">
     <div class="container-kf">
       <SectionHeading
         eyebrow="Testimoni"
@@ -228,9 +238,23 @@ const testimonials = [
   </section>
 
   <!-- CTA -->
-  <section class="section-pad relative overflow-hidden border-t border-ink-line">
-    <NetworkField class="opacity-40" />
+  <section data-scene="cta" class="section-pad relative overflow-hidden border-t border-ink-line">
+    <div data-scene-fallback class="absolute inset-0">
+      <NetworkField class="opacity-40" />
+    </div>
     <div class="container-kf relative">
+      <!-- The 3D scene builds its finale here: the nodes converge into a glowing reactor core. The SVG logo is the static fallback. -->
+      <div data-logo-anchor aria-hidden="true" class="relative mx-auto mb-8 h-56 w-56 sm:h-72 sm:w-72">
+        <div data-scene-fallback class="absolute inset-0 flex items-center justify-center">
+          <svg width="112" height="112" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="64" height="64" rx="14" fill="#0A0A0C" stroke="#28282F" />
+            <path d="M20 14V50" stroke="#F8F6F2" stroke-width="5" stroke-linecap="round" />
+            <path d="M20 33L38 14" stroke="#FF5A1F" stroke-width="5" stroke-linecap="round" />
+            <path d="M20 33L40 50" stroke="#FF5A1F" stroke-width="5" stroke-linecap="round" />
+            <circle cx="46" cy="18" r="3" fill="#FFA23D" />
+          </svg>
+        </div>
+      </div>
       <div class="reveal-up mx-auto max-w-2xl text-center">
         <span class="eyebrow justify-center">Mulai Sekarang</span>
         <h2 class="mt-5 text-balance font-display text-3xl font-semibold text-paper sm:text-4xl">
@@ -256,6 +280,9 @@ const testimonials = [
     'watching for the next deploy...',
   ];
 
+  /** The 3D scene (src/lib/scene) listens for this and sends a light wave through the hero network. */
+  const announce = () => window.dispatchEvent(new CustomEvent('kf:pulse'));
+
   function typeLoop() {
     const target = document.getElementById('typing-target');
     if (!target) return;
@@ -277,6 +304,8 @@ const testimonials = [
               onComplete: () => {
                 lineIndex = (lineIndex + 1) % lines.length;
                 gsap.to(target, { opacity: 1, duration: 0.3 });
+                // idle heartbeat: a light wave runs through the 3D network once per loop
+                if (lineIndex === 0) announce();
                 type();
               },
             });
@@ -292,8 +321,22 @@ const testimonials = [
   gsap.fromTo(
     '#terminal p',
     { opacity: 0, x: -10 },
-    { opacity: 1, x: 0, duration: 0.5, stagger: 0.12, ease: 'power2.out', delay: 0.4 }
+    {
+      opacity: 1,
+      x: 0,
+      duration: 0.5,
+      stagger: 0.12,
+      ease: 'power2.out',
+      delay: 0.4,
+      // every "✓" line sends a wave through the network
+      onStart(this: gsap.core.Tween) {
+        const el = this.targets()[0] as HTMLElement;
+        if (el.textContent?.trim().startsWith('✓')) announce();
+      },
+    }
   );
+  // The 3D scene loads lazily and may not be listening yet during the first second: once more, a bit later.
+  setTimeout(announce, 3500);
 </script>
 
 <style>

@@ -3,3 +3,6 @@ dist/
 .astro/
 .env
 .DS_Store
+
+# 3D scene offline checks
+tools/scene-audit/.out/

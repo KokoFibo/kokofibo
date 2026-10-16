@@ -1,0 +1,129 @@
+---
+// Fixed WebGL canvas that renders the 3D "living system" constellation
+// behind the page. Progressive enhancement: the static SVG <NetworkField>
+// (marked with data-scene-fallback) stays in the markup and is only hidden
+// once the 3D scene has actually rendered its first frame.
+//
+// Engine code lives in src/lib/scene/ and is loaded lazily after page load,
+// so it never competes with LCP.
+---
+<div data-scene-root aria-hidden="true">
+  <canvas id="scene-canvas"></canvas>
+</div>
+
+<script>
+  import { detectCapability } from '../lib/scene/capability';
+
+  const cap = detectCapability();
+  const canvas = document.getElementById('scene-canvas') as HTMLCanvasElement | null;
+  const html = document.documentElement;
+
+  if (canvas && cap.tier !== 'none') {
+    let cleanup: (() => void) | undefined;
+
+    const start = async () => {
+      try {
+        const [{ createScene }, { Journey, bindServiceHighlight }] = await Promise.all([
+          import('../lib/scene/engine'),
+          import('../lib/scene/journey'),
+        ]);
+
+        // Layout → scroll keyframes + anchors. Re-measured whenever the page changes size.
+        const journey = new Journey();
+        journey.measure();
+        let ctrl: ReturnType<typeof createScene> | undefined;
+        let measureRaf = 0;
+        const remeasure = () => {
+          cancelAnimationFrame(measureRaf);
+          measureRaf = requestAnimationFrame(() => {
+            journey.measure();
+            ctrl?.invalidate(); // redraw even if the scene was idle
+          });
+        };
+        const ro = new ResizeObserver(remeasure);
+        ro.observe(document.body);
+        window.addEventListener('resize', remeasure, { passive: true });
+        window.addEventListener('load', remeasure, { once: true });
+        document.fonts?.ready.then(remeasure);
+
+        let unbindHighlight = () => {};
+        let modalObserver: MutationObserver | undefined;
+        const dispose = () => {
+          ro.disconnect();
+          window.removeEventListener('resize', remeasure);
+          unbindHighlight();
+          modalObserver?.disconnect();
+        };
+        cleanup = dispose;
+
+        ctrl = createScene(canvas, cap, journey, {
+          onReady: () => html.classList.add('scene-3d'),
+          onFallback: (reason) => {
+            html.classList.remove('scene-3d');
+            console.info('[scene] fallback to SVG:', reason);
+            if (reason !== 'context-lost') dispose();
+          },
+        });
+        unbindHighlight = bindServiceHighlight((i) => ctrl?.setActiveHub(i));
+
+        // ?scene=debug → small QA readout with a "copy report" button (never loaded otherwise).
+        if (cap.debug) {
+          const { mountDebugHud } = await import('../lib/scene/debugHud');
+          const unmount = mountDebugHud(ctrl);
+          const prevDispose = unbindHighlight;
+          unbindHighlight = () => {
+            prevDispose();
+            unmount();
+          };
+        }
+
+        // CTA: the K beats while the primary button is hovered/focused (tap = one beat on touch screens).
+        const cta = document.querySelector<HTMLElement>('[data-scene="cta"] .btn-primary');
+        if (cta) {
+          const on = () => ctrl?.setLogoActive(true);
+          const off = () => ctrl?.setLogoActive(false);
+          const kick = () => ctrl?.kickLogo();
+          cta.addEventListener('pointerenter', on);
+          cta.addEventListener('pointerleave', off);
+          cta.addEventListener('focus', on);
+          cta.addEventListener('blur', off);
+          cta.addEventListener('pointerdown', kick);
+          const prev = unbindHighlight;
+          unbindHighlight = () => {
+            prev();
+            cta.removeEventListener('pointerenter', on);
+            cta.removeEventListener('pointerleave', off);
+            cta.removeEventListener('focus', on);
+            cta.removeEventListener('blur', off);
+            cta.removeEventListener('pointerdown', kick);
+          };
+        }
+
+        // A video modal (fixed, with backdrop-blur) sits on top of the page: freeze the scene
+        // while one is open so playback never competes with an animating canvas behind the blur.
+        const modals = Array.from(document.querySelectorAll<HTMLElement>('.testimonial-modal'));
+        if (modals.length) {
+          modalObserver = new MutationObserver(() => {
+            ctrl?.setPaused(modals.some((m) => !m.classList.contains('hidden')));
+          });
+          modals.forEach((m) => modalObserver!.observe(m, { attributes: true, attributeFilter: ['class'] }));
+        }
+      } catch (err) {
+        html.classList.remove('scene-3d');
+        cleanup?.();
+        console.info('[scene] unavailable, using SVG fallback', err);
+      }
+    };
+
+    const schedule = () => {
+      if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 2500 });
+      else setTimeout(start, 800);
+    };
+    if (document.readyState === 'complete') schedule();
+    else window.addEventListener('load', schedule, { once: true });
+  } else {
+    console.info('[scene] disabled:', cap.reason ?? 'no canvas');
+    // With ?scene=debug, say why the 3D is off (reduced motion, no WebGL2, data saver …).
+    if (cap.debug) import('../lib/scene/debugHud').then((m) => m.mountDebugHud(null, cap.reason ?? 'no canvas'));
+  }
+</script>
