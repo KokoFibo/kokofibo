@@ -141,6 +141,8 @@ console.log('8) debug stats and JS cost per frame');
   void R3;
   const st = ctrl2.stats();
   check(st.tier === 'full' && Number.isFinite(st.fps) && st.gpu === 'FAKE GPU' && st.drawCalls === 12, `stats() reports tier, fps, gpu and draw calls (fps ${st.fps.toFixed(0)})`);
+  check(st.slowLog.length > 0 && st.slowLog.every((e) => e.ms >= 40 && e.frame > 1 && Number.isFinite(e.y)), `slow frames are logged with duration, scroll position and frame number (${st.slowLog.length} entries, last ${st.slowLog[st.slowLog.length - 1]?.ms} ms)`);
+  check(st.slowLog.length <= 40, 'the slow-frame log is capped at 40 entries');
 }
 {
   // a fresh, healthy scene in the finale (the busiest state: everything morphed, comets + glow + sweep)

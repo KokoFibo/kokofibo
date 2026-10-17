@@ -67,6 +67,7 @@ function docPos(el: HTMLElement): { x: number; y: number } {
 }
 
 const section = (name: string) => document.querySelector<HTMLElement>(`[data-scene="${name}"]`);
+const SCENES = ['hero', 'services', 'process', 'portfolio', 'testimonials', 'cta'] as const;
 
 export class Journey {
   /** Service hubs: document px. */
@@ -83,11 +84,19 @@ export class Journey {
   /** Left part of the hero terminal: where the data wave starts. */
   readonly terminal: Anchor = { x: 0, y: 0 };
   private hasLogo = false;
+  /** Viewport height used for the keyframes (see measure()). */
+  vh = 0;
+  /** Measured top/bottom of each scene section, document px (debug report). */
+  readonly sections: Record<string, { top: number; bottom: number }> = {};
   private keys: Key[] = [{ y: 0, ...newSample() }];
 
   /** (Re)read the layout. Cheap; call on resize / load / content size changes. */
   measure(): void {
-    const vh = window.innerHeight;
+    // Use the *large* viewport (the canvas is 100lvh). On phones window.innerHeight changes while the
+    // browser toolbar slides in and out, which would otherwise shift every keyframe during scrolling.
+    const canvas = document.getElementById('scene-canvas');
+    const vh = Math.max(window.innerHeight, canvas?.clientHeight ?? 0);
+    this.vh = vh;
     const keys: Key[] = [{ y: 0, ...newSample() }];
     /** Append a keyframe that repeats the previous one with `patch` applied. */
     const add = (y: number, patch: Partial<JourneySample> = {}): void => {
@@ -98,6 +107,14 @@ export class Journey {
       const top = docPos(el).y;
       return { top, bottom: top + el.offsetHeight };
     };
+
+    for (const name of SCENES) {
+      const el = section(name);
+      if (el) {
+        const sp = span(el);
+        this.sections[name] = { top: Math.round(sp.top), bottom: Math.round(sp.bottom) };
+      }
+    }
 
     // ── anchors ──
     // Service hubs. Grid layouts: right on the card's top-right corner, so the hub glows half
@@ -211,6 +228,32 @@ export class Journey {
     }
 
     this.keys = keys;
+  }
+
+  /** Everything measured from the real page, for the debug report (lets the timeline be re-simulated exactly). */
+  describe(): unknown {
+    const r = (v: number) => Math.round(v);
+    const pt = (a: Anchor) => ({ x: r(a.x), y: r(a.y) });
+    return {
+      vh: this.vh,
+      sections: this.sections,
+      hubs: this.anchors.map(pt),
+      gates: this.gates.map(pt),
+      logo: { ...pt(this.logo), px: r(this.logoPx) },
+      terminal: pt(this.terminal),
+      clusterPx: r(this.clusterPx),
+      gatePx: r(this.gatePx),
+      keys: this.keys.map((k) => ({
+        y: r(k.y),
+        morph: +k.morph.toFixed(2),
+        pipe: +k.pipe.toFixed(2),
+        recede: +k.recede.toFixed(2),
+        prog: +k.prog.toFixed(2),
+        logo: +k.logo.toFixed(2),
+        opacity: +k.opacity.toFixed(2),
+        still: k.still,
+      })),
+    };
   }
 
   sample(scrollY: number, out: JourneySample): JourneySample {

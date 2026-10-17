@@ -1,11 +1,13 @@
 import type { SceneController, SceneStats } from './engine';
+import type { Journey } from './journey';
 
 /**
  * Tiny on-screen readout for QA: add ?scene=debug to the URL.
  * Loaded only in that case, so normal visitors never download it.
  * The "Salin laporan" button copies everything needed to judge performance on a real device.
  */
-export function mountDebugHud(ctrl: SceneController | null, offReason?: string): () => void {
+export function mountDebugHud(opts: { ctrl: SceneController | null; journey?: Journey; offReason?: string }): () => void {
+  const { ctrl, journey, offReason } = opts;
   const box = document.createElement('div');
   Object.assign(box.style, {
     position: 'fixed', left: '8px', bottom: '8px', zIndex: '2147483000', maxWidth: '280px',
@@ -42,6 +44,7 @@ export function mountDebugHud(ctrl: SceneController | null, offReason?: string):
       `canvas ${s.canvas[0]}×${s.canvas[1]}  scroll ${Math.round(s.scrollY)}/${Math.max(0, document.documentElement.scrollHeight - innerHeight)}`,
       `morph ${f2(s.state.morph)}  pipe ${f2(s.state.pipe)}  recede ${f2(s.state.recede)}`,
       `prog ${f2(s.state.prog)}  logo ${f2(s.state.logo)}  op ${f2(s.state.opacity)}${s.target.still ? '  still' : ''}`,
+      s.slowLog.length ? `last slow ${s.slowLog[s.slowLog.length - 1].ms}ms @scroll ${s.slowLog[s.slowLog.length - 1].y} (#${s.slowLog[s.slowLog.length - 1].frame})` : 'no slow frames yet',
     ].join('\n');
   };
 
@@ -60,6 +63,7 @@ export function mountDebugHud(ctrl: SceneController | null, offReason?: string):
         reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
         pageHeight: document.documentElement.scrollHeight,
         scene: snapshot() ?? { off: offReason },
+        journey: journey?.describe(),
       },
       null,
       2

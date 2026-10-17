@@ -69,7 +69,7 @@
         // ?scene=debug → small QA readout with a "copy report" button (never loaded otherwise).
         if (cap.debug) {
           const { mountDebugHud } = await import('../lib/scene/debugHud');
-          const unmount = mountDebugHud(ctrl);
+          const unmount = mountDebugHud({ ctrl, journey });
           const prevDispose = unbindHighlight;
           unbindHighlight = () => {
             prevDispose();
@@ -124,6 +124,6 @@
   } else {
     console.info('[scene] disabled:', cap.reason ?? 'no canvas');
     // With ?scene=debug, say why the 3D is off (reduced motion, no WebGL2, data saver …).
-    if (cap.debug) import('../lib/scene/debugHud').then((m) => m.mountDebugHud(null, cap.reason ?? 'no canvas'));
+    if (cap.debug) import('../lib/scene/debugHud').then((m) => m.mountDebugHud({ ctrl: null, offReason: cap.reason ?? 'no canvas' }));
   }
 </script>

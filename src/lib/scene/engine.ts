@@ -25,6 +25,8 @@ export interface SceneStats {
   frameMsMax: number;
   slowFrames: number;
   frames: number;
+  /** The most recent slow frames: how long, at which scroll position, and which frame number (a very low number = start-up cost). */
+  slowLog: { ms: number; y: number; frame: number }[];
   drawCalls: number;
   points: number;
   lines: number;
@@ -190,6 +192,7 @@ export function createScene(
   let forceFrames = 0;
   const minInterval = 1000 / cap.fpsCap - 2;
   const perf = { ema: 1000 / cap.fpsCap, max: 0, slow: 0, frames: 0 };
+  const slowLog: { ms: number; y: number; frame: number }[] = [];
 
   const frame = (now: number): void => {
     raf = requestAnimationFrame(frame);
@@ -202,7 +205,11 @@ export function createScene(
     if (raw < 250) {
       perf.ema += (raw - perf.ema) * 0.05;
       perf.max = Math.max(perf.max, raw);
-      if (raw > (1000 / cap.fpsCap) * 1.5) perf.slow++;
+    }
+    if (raw > (1000 / cap.fpsCap) * 1.5 && perf.frames > 1) {
+      if (raw < 250) perf.slow++; // ≥ 250 ms = the tab was in the background, not a rendering problem
+      slowLog.push({ ms: Math.round(raw), y: Math.round(window.scrollY), frame: perf.frames });
+      if (slowLog.length > 40) slowLog.shift();
     }
 
     // ease scroll-driven values + pointer
@@ -380,6 +387,7 @@ export function createScene(
         frameMsMax: perf.max,
         slowFrames: perf.slow,
         frames: perf.frames,
+        slowLog: slowLog.slice(),
         drawCalls: info.calls,
         points: info.points,
         lines: info.lines,

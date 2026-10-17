@@ -33,9 +33,12 @@ function layout(kind: 'desktop' | 'phone') {
   return { els, vw, vh, pageH: y };
 }
 
-for (const kind of ['desktop', 'phone'] as const) {
-  const L = layout(kind);
-  (globalThis as any).window = { innerHeight: L.vh, innerWidth: L.vw };
+// 'phone+toolbar' = the same phone with the browser toolbar showing: visible viewport 632 px, canvas (100lvh) 736 px.
+for (const kind of ['desktop', 'phone', 'phone+toolbar'] as const) {
+  const L = layout(kind === 'desktop' ? 'desktop' : 'phone');
+  const visibleH = kind === 'phone+toolbar' ? 632 : L.vh;
+  if (kind === 'phone+toolbar') L.els['#scene-canvas'] = { clientHeight: 736 };
+  (globalThis as any).window = { innerHeight: visibleH, innerWidth: L.vw };
   (globalThis as any).document = {
     querySelector: (s: string) => L.els[s] ?? null,
     getElementById: (id: string) => L.els['#' + id] ?? null,
@@ -44,8 +47,10 @@ for (const kind of ['desktop', 'phone'] as const) {
   const j = new Journey();
   j.measure();
   const keys = (j as any).keys as any[];
-  const maxScroll = L.pageH - L.vh;
-  console.log(`\n==== ${kind.toUpperCase()}  viewport ${L.vw}×${L.vh}, page ${L.pageH}px, max scroll ${maxScroll}`);
+  const maxScroll = L.pageH - visibleH;
+  if (kind === 'phone+toolbar' && (j as any).vh !== 736) process.exitCode = 1;
+  if (kind === 'phone+toolbar') console.log(`  viewport height used for keyframes: ${(j as any).vh}px (visible ${visibleH}px, canvas 736px) ${(j as any).vh === 736 ? '✓ stable large viewport' : '✗ still follows the toolbar'}`);
+  console.log(`\n==== ${kind.toUpperCase()}  viewport ${L.vw}×${visibleH}, page ${L.pageH}px, max scroll ${maxScroll}`);
   console.log('key#  scrollY  (×vh)   morph pipe recede prog logo  opacity still');
   keys.forEach((k, i) =>
     console.log(`${String(i).padStart(3)}  ${String(Math.round(k.y)).padStart(7)}  ${(k.y / L.vh).toFixed(2).padStart(5)}   ${[k.morph, k.pipe, k.recede, k.prog, k.logo].map((v) => v.toFixed(0).padStart(4)).join(' ')}   ${k.opacity.toFixed(2).padStart(6)}  ${k.still}`)

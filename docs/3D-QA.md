@@ -10,7 +10,12 @@ memandu itu.
 2. Tambahkan `?scene=debug` di URL. Panel kecil muncul di kiri bawah:
    - `fps` (halus), `worst` (frame terlambat), `slow a/b` (jumlah frame > 1,5× target dari total),
    - `GPU` (nama GPU), `draw/pts/lines` (beban render), `scroll`, dan nilai tiap act.
-3. Setelah selesai scroll dari atas ke bawah, tekan **Salin laporan** dan kirim hasilnya apa adanya.
+3. Setelah selesai scroll dari atas ke bawah, tekan **Salin laporan** dan kirim hasilnya apa adanya. Laporan memuat:
+   - `slowLog`: 40 frame lambat terakhir, masing-masing dengan durasi, posisi scroll (`y`), dan nomor frame.
+     Nomor frame sangat kecil (< 10) berarti biaya awal (kompilasi shader), bukan masalah saat scroll.
+   - `journey`: posisi tiap section, kartu, gerbang, dan keyframe yang terukur dari halaman Anda. Dengan ini
+     timeline bisa disimulasikan ulang persis, tidak lagi memakai perkiraan tinggi section.
+   Panel juga menampilkan frame lambat terakhir (`last slow … @scroll …`).
 
 Parameter lain: `?scene=off` (paksa SVG, untuk pembanding), `?scene=lite|mobile|full` (paksa tier).
 
@@ -19,7 +24,7 @@ Parameter lain: `?scene=off` (paksa SVG, untuk pembanding), `?scene=lite|mobile|
 | Perangkat | fps | slow/frames | Catatan |
 |---|---|---|---|
 | Laptop/desktop | ≥ 55 | < 2% | tier `full`, dpr hingga 2 |
-| Android kelas menengah | ≥ 45 | < 5% | seharusnya tier `mobile` atau `lite` |
+| Android kelas menengah | ≥ 45 | < 5% | seharusnya tier `mobile` atau `lite`. Nama GPU `Brave` = browser menyembunyikannya (normal) |
 | iPhone | ≥ 50 | < 3% | cek juga tidak ada "context lost" |
 | Semua | — | — | tidak ada error di console; halaman tetap bisa dipakai saat 3D mati |
 
