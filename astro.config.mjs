@@ -3,6 +3,7 @@ import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
+  build: { inlineStylesheets: 'always' },
   site: 'https://kokofibo.com',
   vite: {
     build: {

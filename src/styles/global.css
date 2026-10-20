@@ -139,3 +139,24 @@ html.scene-3d [data-scene="services"] .card-kf {
 html.scene-3d [data-scene="services"] .card-kf:hover {
   background-color: rgb(27 27 32 / 0.42);
 }
+
+/* ───────── Hero entrance: pure CSS, so above-the-fold text never waits for JavaScript ───────── */
+@keyframes hero-rise {
+  from { opacity: 0; transform: translate3d(0, 16px, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes hero-rise-t {
+  from { transform: translate3d(0, 16px, 0); }
+  to { transform: none; }
+}
+.hero-in {
+  animation: hero-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--d, 0s);
+}
+/* the headline + intro are the largest-contentful-paint candidates: move them, never hide them */
+.hero-in-t {
+  animation-name: hero-rise-t;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-in { animation: none; }
+}

@@ -14,10 +14,13 @@
 <script>
   import { detectCapability } from '../lib/scene/capability';
 
-  const cap = detectCapability();
   const canvas = document.getElementById('scene-canvas') as HTMLCanvasElement | null;
   const html = document.documentElement;
 
+  // Capability detection creates a throw-away WebGL2 context, so it runs after load + idle,
+  // never in the first-paint window.
+  const boot = () => {
+  const cap = detectCapability();
   if (canvas && cap.tier !== 'none') {
     let cleanup: (() => void) | undefined;
 
@@ -124,15 +127,18 @@
       }
     };
 
-    const schedule = () => {
-      if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 2500 });
-      else setTimeout(start, 800);
-    };
-    if (document.readyState === 'complete') schedule();
-    else window.addEventListener('load', schedule, { once: true });
+    start();
   } else {
     console.info('[scene] disabled:', cap.reason ?? 'no canvas');
     // With ?scene=debug, say why the 3D is off (reduced motion, no WebGL2, data saver …).
     if (cap.debug) import('../lib/scene/debugHud').then((m) => m.mountDebugHud({ ctrl: null, offReason: cap.reason ?? 'no canvas' }));
   }
+  };
+
+  const schedule = () => {
+    if ('requestIdleCallback' in window) requestIdleCallback(boot, { timeout: 2500 });
+    else setTimeout(boot, 800);
+  };
+  if (document.readyState === 'complete') schedule();
+  else window.addEventListener('load', schedule, { once: true });
 </script>
