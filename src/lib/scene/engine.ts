@@ -153,8 +153,19 @@ export function createScene(
   let samples = 0;
   let sum = 0;
   let goodWindows = 0;
+  let crawl = 0;
   const monitor = (rawMs: number): void => {
     if (goodWindows >= 3 || rawMs > 250) return; // settled, or tab just resumed
+    // Hopelessly slow from the very start (even during warm-up): give up fast instead of
+    // keeping the main thread busy for seconds before the quality monitor reacts.
+    if (rawMs > 120) {
+      if (++crawl >= 8) {
+        fail('slow-device');
+        return;
+      }
+    } else {
+      crawl = 0;
+    }
     if (warm > 0) {
       warm--;
       return;
@@ -190,6 +201,10 @@ export function createScene(
   let introStarted = false;
   let paused = false;
   let forceFrames = 0;
+  // The page itself scrolls at the screen's refresh rate (60/120 Hz) on the compositor. A scroll-locked
+  // element drawn at only 30 fps (the "lite" tier) visibly steps against it, so the cap is lifted while
+  // the user is scrolling and only applies to the ambient animation when the page is at rest.
+  let lastScrollAt = -1e9;
   const minInterval = 1000 / cap.fpsCap - 2;
   const perf = { ema: 1000 / cap.fpsCap, max: 0, slow: 0, frames: 0 };
   const slowLog: { ms: number; y: number; frame: number }[] = [];
@@ -197,7 +212,7 @@ export function createScene(
   const frame = (now: number): void => {
     raf = requestAnimationFrame(frame);
     const raw = now - last;
-    if (cap.fpsCap < 60 && raw < minInterval) return;
+    if (cap.fpsCap < 60 && raw < minInterval && now - lastScrollAt > 250) return;
     last = now;
     const dt = Math.min(raw / 1000, 0.1);
     time += dt;
@@ -317,6 +332,7 @@ export function createScene(
     else stop();
   };
   const onScroll = (): void => {
+    lastScrollAt = performance.now();
     readTarget();
     sync();
   };

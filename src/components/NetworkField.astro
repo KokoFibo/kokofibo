@@ -80,7 +80,7 @@ const edges = edgesDefault;
         delay: 0.2,
       });
 
-      gsap.to(nodesEls, {
+      const pulse = gsap.to(nodesEls, {
         scale: 1.6,
         transformOrigin: 'center',
         opacity: 0.5,
@@ -90,6 +90,13 @@ const edges = edgesDefault;
         repeat: -1,
         yoyo: true,
       });
+
+      // While the WebGL scene is on, this SVG is hidden (html.scene-3d): don't keep
+      // animating it. Pause the infinite pulse; resume if the scene falls back to SVG.
+      const html = document.documentElement;
+      const sync = () => (html.classList.contains('scene-3d') ? pulse.pause() : pulse.resume());
+      new MutationObserver(sync).observe(html, { attributes: true, attributeFilter: ['class'] });
+      sync();
     });
   };
 

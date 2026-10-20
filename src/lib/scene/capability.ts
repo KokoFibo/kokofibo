@@ -28,15 +28,25 @@ const PRESETS: Record<Exclude<Tier, 'none'>, Omit<Capability, 'tier' | 'reason' 
   lite: { maxDpr: 1, nodeCount: 45, pulseCount: 6, fpsCap: 30 },
 };
 
-function hasWebGL2(): boolean {
+/** 'ok' = hardware WebGL2, 'software' = CPU-rendered WebGL (SwiftShader, llvmpipe …), 'none' = no WebGL2. */
+function probeWebGL2(): 'ok' | 'software' | 'none' {
   try {
     const c = document.createElement('canvas');
     const gl = c.getContext('webgl2');
-    if (!gl) return false;
+    if (!gl) return 'none';
+    let renderer = '';
+    try {
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      renderer = String(gl.getParameter(ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER));
+    } catch {
+      /* renderer name unavailable: treat as hardware */
+    }
     gl.getExtension('WEBGL_lose_context')?.loseContext();
-    return true;
+    // WebGL drawn by the CPU runs the scene at a few fps and blocks the main thread
+    // (GPU-blocklisted browsers, remote desktops, headless/lab browsers). Keep the SVG there.
+    return /swiftshader|llvmpipe|softpipe|software|basic render/i.test(renderer) ? 'software' : 'ok';
   } catch {
-    return false;
+    return 'none';
   }
 }
 
@@ -57,7 +67,9 @@ export function detectCapability(): Capability {
   if (nav.connection?.saveData) return none('save-data');
   if (nav.connection?.effectiveType && /(^|-)2g$/.test(nav.connection.effectiveType)) return none('slow-network');
 
-  if (!hasWebGL2()) return none('no-webgl2');
+  const gl = probeWebGL2();
+  if (gl === 'none') return none('no-webgl2');
+  if (gl === 'software' && forced !== 'lite' && forced !== 'mobile' && forced !== 'full') return none('software-renderer');
 
   const pointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const narrow = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
