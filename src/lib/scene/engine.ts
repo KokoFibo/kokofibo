@@ -128,15 +128,13 @@ export function createScene(
     else constellation.group.position.set(-cx * s, -cy * s + 0.4, 0); // centre the cloud
     return true;
   };
-  let resizeRaf = 0;
+  // Resizing the canvas clears its drawing buffer. Do it inside the frame, right before drawing,
+  // so the cleared buffer is never presented (that showed up as a "refresh" flash on phones).
+  let sizeDirty = false;
   const onResize = (): void => {
-    cancelAnimationFrame(resizeRaf);
-    resizeRaf = requestAnimationFrame(() => {
-      if (applySize()) {
-        forceFrames = 3; // redraw even if the scene is "still"
-        sync();
-      }
-    });
+    sizeDirty = true;
+    forceFrames = 3; // redraw even if the scene is "still"
+    sync();
   };
   window.addEventListener('resize', onResize, { passive: true });
   applySize();
@@ -154,6 +152,7 @@ export function createScene(
   let sum = 0;
   let goodWindows = 0;
   let crawl = 0;
+  let dprDrop = false;
   const monitor = (rawMs: number): void => {
     if (goodWindows >= 3 || rawMs > 250) return; // settled, or tab just resumed
     // Hopelessly slow from the very start (even during warm-up): give up fast instead of
@@ -177,10 +176,8 @@ export function createScene(
     if (avg > (1000 / cap.fpsCap) * 1.45) {
       level++;
       if (level === 1 && dpr > 1) {
-        dpr = 1;
-        renderer.setPixelRatio(1);
-        renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
-        constellation.setPixelRatio(1);
+        dprDrop = true; // applied at the start of the next frame, just before drawing
+        forceFrames = Math.max(forceFrames, 2);
         warm = 20;
       } else {
         fail('slow-device');
@@ -296,6 +293,18 @@ export function createScene(
     );
     constellation.update(time, dt, z, state);
 
+    if (dprDrop) {
+      dprDrop = false;
+      dpr = 1;
+      renderer.setPixelRatio(1);
+      constellation.setPixelRatio(1);
+      sizeDirty = true;
+      lastW = 0; // force applySize to re-run setSize with the new ratio
+    }
+    if (sizeDirty) {
+      sizeDirty = false;
+      applySize();
+    }
     renderer.render(scene, camera);
 
     if (!introStarted) {

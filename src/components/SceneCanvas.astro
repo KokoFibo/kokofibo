@@ -42,7 +42,16 @@
         };
         const ro = new ResizeObserver(remeasure);
         ro.observe(document.body);
-        window.addEventListener('resize', remeasure, { passive: true });
+        // Phones fire `resize` continuously while the browser toolbar slides in/out (height only). The
+        // keyframes use the large viewport, so only a width change (rotation) needs a re-measure here;
+        // content/height changes are caught by the ResizeObserver on <body>.
+        let lastInnerW = window.innerWidth;
+        const onWinResize = () => {
+          if (window.innerWidth === lastInnerW) return;
+          lastInnerW = window.innerWidth;
+          remeasure();
+        };
+        window.addEventListener('resize', onWinResize, { passive: true });
         window.addEventListener('load', remeasure, { once: true });
         document.fonts?.ready.then(remeasure);
 
@@ -50,7 +59,7 @@
         let modalObserver: MutationObserver | undefined;
         const dispose = () => {
           ro.disconnect();
-          window.removeEventListener('resize', remeasure);
+          window.removeEventListener('resize', onWinResize);
           unbindHighlight();
           modalObserver?.disconnect();
         };
